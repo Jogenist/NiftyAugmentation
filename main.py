@@ -14,146 +14,170 @@ import nibabel as nib
 import os
 import random as rm
 
-#----------------------------------------------------------------------------
+# ----------------------------------------------------------------------------
 DATADIR = "Sample Data"         #Data directory
 img_height = 64                 #Variables
 img_width = 64
 Img_dataset = []
 Lab_dataset = []
+Img_str_lst = []
+Lab_str_lst = []
 
-#----------------------------------------------------------------------------
-#Select augmentation here:
+# ----------------------------------------------------------------------------
+# Select augmentation here:
 
-Aug_Whtlst = ["rotate", "scale", "flip", "translate", "blur"]
-Aug_rand = rm.randrange(len(Aug_Whtlst))
-print(Aug_rand)
-print(Aug_Whtlst[Aug_rand])
+Aug_Whtlst = ["rotate", "scale", "flip", "translate", "blur", "no augmentation"]
 
-#----------------------------------------------------------------------------
-#load all nii image files from datadir in dataset
+# ----------------------------------------------------------------------------
+# load all nii image files from datadir in dataset
 os.chdir(DATADIR + "/Image")
 for nii in os.listdir(os.getcwd()):
+    Img_str_lst.append(nii[:-4])
     img = nib.load(nii)
     nii_data = img.get_fdata()
-    #print(nii_data.shape)
+    #print(nii_data)
     I = nii_data[..., 0]  # I is the first volume
-    print(I.shape)
+    #print(I)
     Img_dataset.append(I)
 Img_dataset = np.asarray(Img_dataset)
 
-#load all nii segmentation files from datadir in dataset
-os.chdir("..")                                          #go back one directory
+
+# load all nii segmentation files from datadir in dataset
+os.chdir("..")                                          # go back one directory
 os.chdir("Label")
 for nii in os.listdir(os.getcwd()):
+    Lab_str_lst.append(nii[:-4])
     lab = nib.load(nii)
     nii_data = lab.get_fdata()
     I = nii_data[..., 0]  # I is the first volume
     Lab_dataset.append(I)
-    #print(Lab_dataset.shape)
+    # print(Lab_dataset.shape)
 Lab_dataset = np.asarray(Lab_dataset)
 print("---------------------------------------")
 
-if Img_dataset.shape != Lab_dataset.shape:                #if amount of images != amount of labels => error
+if Img_dataset.shape != Lab_dataset.shape:                # if amount of images != amount of labels => error
     print("Something went wrong while reading data!")
     print(Img_dataset.shape)
     print(Lab_dataset.shape)
     exit()
 
-#----------------------------------------------------------------------------
-os.chdir("..")                                          #go back one directory
+# ----------------------------------------------------------------------------
+os.chdir("..")                                          # go back one directory
 
-#augment given nii file
+# augment given nii file
 def augmentation(aug_int,file_int):
-#-------------------------------------ROTATE-----------------------------------------------
+# -------------------------------------ROTATE-----------------------------------------------
     if aug_int == 0:
         print("---rotate---")
-        for slice_Number in range(3):#range(nii_data.shape[2]):
-            i = 10 #start at layer 10
-            # rotation matrix for rotation of 0.2 radians around x axis
-            M = y_rotmat(0.1)
-            translation = [0,0,0]  # Translation from I to J [y,z,x]
-            # order=1 for linear interpolation
-            K = affine_transform(Img_dataset[file_int], M, translation, output_shape=(64,64,64), order=1)
-            P = affine_transform(Lab_dataset[file_int], M, translation, output_shape=(64,64,64), order=1)
-            print(K.shape)
-            plt.imshow(K[:, i])
-            plt.show()
-            i = i + 1
+        angle = rm.uniform(0.1,0.5)
+        print(angle)
+        i = 10 #start at layer 10
+        # rotation matrix for rotation of 0.2 radians around x axis
+        M = y_rotmat(angle)
+        translation = [0,0,0]  # Translation from I to J [y,z,x]
+        # order=1 for linear interpolation
+        K = affine_transform(Img_dataset[file_int], M, translation, output_shape=(64,64,64), order=1)
+        P = affine_transform(Lab_dataset[file_int], M, translation, output_shape=(64,64,64), order=1)
+        print(K.shape)
+        plt.imshow(K[:, i])
+        plt.show()
+        i = i + 1
+        aug_str = "rotated"
 
     # -------------------------------------SCALE-----------------------------------------------
     if aug_int == 1:
         print("---scale---")
-        for slice_Number in range(3):#range(nii_data.shape[2]):
-            i = 10  # start at layer 10
-            # rotation matrix for rotation of 0.2 radians around x axis
-            M = y_rotmat(0)
-            translation = [0,0,0]  # Translation from I to J [y,z,x]
-            # order=1 for linear interpolation
-            K = affine_transform(Img_dataset[file_int], M, translation, output_shape=(32,32,32), order=1)
-            P = affine_transform(Lab_dataset[file_int], M, translation, output_shape=(32,32,32), order=1)
-            print(K.shape)
-            plt.imshow(K[:, i])
-            plt.show()
-            i = i + 1
+        i = 10  # start at layer 10
+        # rotation matrix for rotation of 0.2 radians around x axis
+        M = y_rotmat(0)
+        translation = [0,0,0]  # Translation from I to J [y,z,x]
+        # order=1 for linear interpolation
+        K = affine_transform(Img_dataset[file_int], M, translation, output_shape=(32,32,32), order=1)
+        P = affine_transform(Lab_dataset[file_int], M, translation, output_shape=(32,32,32), order=1)
+        print(K.shape)
+        plt.imshow(K[:, i])
+        plt.show()
+        i = i + 1
+        aug_str = "scaled"
     # -------------------------------------FLIP-----------------------------------------------
     if aug_int == 2:
         print("---flip---")
-        for slice_Number in range(3):  # range(nii_data.shape[2]):
-            i = 10  # start at layer 10
-            K = np.flip(Img_dataset[file_int],1)
-            P = np.flip(Lab_dataset[file_int],1)
-            print(K.shape)
-            plt.imshow(K[:, i])
-            plt.show()
-            i = i + 1
+        i = 10  # start at layer 10
+        K = np.flip(Img_dataset[file_int],1)
+        P = np.flip(Lab_dataset[file_int],1)
+        print(K.shape)
+        plt.imshow(K[:, i])
+        plt.show()
+        i = i + 1
+        aug_str = "flipped"
     # -------------------------------------TRANSLATE-----------------------------------------------
     if aug_int == 3:
         print("---translate---")
-        for slice_Number in range(3):  # range(nii_data.shape[2]):
-            i = 10  # start at layer 10
-            translation = [-32.2, 24, -32.2]  # Translation from I to J [y,z,x]
-            M = y_rotmat(0)
-            # order=1 for linear interpolation
-            K = affine_transform(Img_dataset[file_int], M, translation, output_shape=(64,64,64), order=1)
-            P = affine_transform(Lab_dataset[file_int], M, translation, output_shape=(32,32,32), order=1)
-            print(K.shape)
-            plt.imshow(K[:, i])
-            plt.show()
-            i = i + 1
+        i = 10  # start at layer 10
+        translation = [-32.2, 24, -32.2]  # Translation from I to J [y,z,x]
+        M = y_rotmat(0)
+        # order=1 for linear interpolation
+        K = affine_transform(Img_dataset[file_int], M, translation, output_shape=(64,64,64), order=1)
+        P = affine_transform(Lab_dataset[file_int], M, translation, output_shape=(32,32,32), order=1)
+        print(K.shape)
+        plt.imshow(K[:, i])
+        plt.show()
+        i = i + 1
+        aug_str = "translated"
     # -------------------------------------SHIFT----------------------------------------------- (not working i guess)
-    if aug_int == 4:
+    if aug_int == 10: # shift is not working, therefore it cannot be reached as random augmentation
         print("---shift---")
-        for slice_Number in range(3):#range(nii_data.shape[2]):
-            i = 10  # start at layer 10
-            # order=1 for linear interpolation
-            K = shift(Img_dataset[file_int], 1,  order=1)
-            P = shift(Lab_dataset[file_int], 1,  order=1)
-            print(K.shape)
-            plt.imshow(K[ :, i])
-            plt.show()
-            i = i + 1
+        i = 10  # start at layer 10
+        # order=1 for linear interpolation
+        K = shift(Img_dataset[file_int], 1,  order=1)
+        P = shift(Lab_dataset[file_int], 1,  order=1)
+        print(K.shape)
+        plt.imshow(K[:, i])
+        plt.show()
+        i = i + 1
+        aug_str = "shifted"
     # -------------------------------------BLUR-----------------------------------------------
-    if aug_int == 5:
+    if aug_int == 4:
         print("---blur---")
-        for slice_Number in range(3):  # range(nii_data.shape[2]):
-            i = 10  # start at layer 10
-            translation = [-0.5, 0, 0.5]  # Translation from I to J [y,z,x]
-            M = y_rotmat(0)
-            # order=1 for linear interpolation
-            K = affine_transform(Img_dataset[file_int], M, translation, output_shape=(64, 64, 64), order=1)
-            P = affine_transform(Lab_dataset[file_int], M, translation, output_shape=(64, 64, 64), order=1)
-            print(K.shape)
-            plt.imshow(K[:, i])
-            plt.show()
-            i = i + 1
+        i = 10  # start at layer 10
+        translation = [-0.5, 0, 0.5]  # Translation from I to J [y,z,x]
+        M = y_rotmat(0)
+        # order=1 for linear interpolation
+        K = affine_transform(Img_dataset[file_int], M, translation, output_shape=(64, 64, 64), order=1)
+        P = affine_transform(Lab_dataset[file_int], M, translation, output_shape=(64, 64, 64), order=1)
+        print(K.shape)
+        plt.imshow(K[:, i])
+        plt.show()
+        i = i + 1
+        aug_str = "blured"
+    # -------------------------------------NO AUGMENTATION-----------------------------------------------
+    if aug_int == 5:
+        print("---no augmentation---")
+        i = 10  # start at layer 10
+        K = Img_dataset[file_int]
+        P = Lab_dataset[file_int]
+        print(K.shape)
+        plt.imshow(K[:, i])
+        plt.show()
+        i = i + 1
+        return()              # dont save unaugmented image, therefore leave here
 
     new_image = nib.Nifti1Image(K, affine=np.eye(4))
-    nib.save(new_image, 'augmentedImage.nii')
+    nib.save(new_image, Img_str_lst[file_int] + '_' + aug_str + '.nii')
     new_label = nib.Nifti1Image(P, affine=np.eye(4))
-    nib.save(new_label, 'augmentedLabel.nii')
+    nib.save(new_label, Lab_str_lst[file_int] + '_' + aug_str + '.nii')
 
 
-augmentation(Aug_rand,1)
+
+
+
+
+for files in range(len(Img_dataset)):
+    Aug_rand = rm.randrange(len(Aug_Whtlst))
+    print(Aug_rand)
+    print(Aug_Whtlst[Aug_rand])
+    print(files)
+    augmentation(Aug_rand,files)
 
 
 
