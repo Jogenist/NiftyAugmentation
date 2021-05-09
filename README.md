@@ -13,12 +13,12 @@ Aktueller Stand:
 
 
 To-Do:
-1. Rotationsache zufällig wählen (bisher wird immer über y gedreht) 
-2. mehrfache Augmentierungen ermöglichen (z.B. Kombination aus rotation und flip) (aber abschaltbar!)
-3. Evtl. Möglichkeiten überlegen mehrere "gecroppte" Nii-Files zu einem neuen Nii zusammenzusetzen
+1. mehrfache Augmentierungen ermöglichen (z.B. Kombination aus rotation und flip) (aber abschaltbar!)
+2. Evtl. Möglichkeiten überlegen mehrere "gecroppte" Nii-Files zu einem neuen Nii zusammenzusetzen
 (z.B. 4 Niftys vierteln und dann zu einem neuen zusammensetzen)
 
 erledigte To-Do's:
+-  Rotationsache zufällig wählen (bisher wird immer über y gedreht) 
 - Möglichkeit wahlweise Augmentations aus dem "Pool" der augmentation-Funktion zu entfernen oder hinzuzufügen -> gelöst mittels Whitelist
 - Zufallsfaktor in die einzelnen Augmentierungen reinbringen (z.B. Winkel bei rotation) -> random float für Winkel
 - Möglichkeit in die augmentation-Funktion einbringen, dass gar nicht augmentiert wird -> falls nicht augmentiert wird, wird die Funktion verlassen und kein neues nii gespeichert
