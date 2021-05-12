@@ -14,8 +14,9 @@ Aktueller Stand:
 
 To-Do:
 1. "Skew"-Augmentation einbauen
-2. mehrfache Augmentierungen ermöglichen (z.B. Kombination aus rotation und flip) (aber abschaltbar!)
-3. Evtl. Möglichkeiten überlegen mehrere "gecroppte" Nii-Files zu einem neuen Nii zusammenzusetzen
+2. "elastic"-Distortion einbauen
+3. mehrfache Augmentierungen ermöglichen (z.B. Kombination aus rotation und flip) (aber abschaltbar!)
+4. Evtl. Möglichkeiten überlegen mehrere "gecroppte" Nii-Files zu einem neuen Nii zusammenzusetzen
 (z.B. 4 Niftys vierteln und dann zu einem neuen zusammensetzen)
 
 erledigte To-Do's:
