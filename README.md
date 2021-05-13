@@ -13,15 +13,15 @@ Aktueller Stand:
 
 
 To-Do:
-1. "Skew"-Augmentation einbauen
-2. "elastic"-Distortion einbauen
-3. "random brightness", "random colour" und "random contrast" einbauen
-4. "random crops + resize" einbauen
-5. mehrfache Augmentierungen ermöglichen (z.B. Kombination aus rotation und flip) (aber abschaltbar!)
-6. Evtl. Möglichkeiten überlegen mehrere "gecroppte" Nii-Files zu einem neuen Nii zusammenzusetzen
+1. "elastic"-Distortion einbauen
+2. "random brightness", "random colour" und "random contrast" einbauen
+3. "random crops + resize" einbauen
+4. mehrfache Augmentierungen ermöglichen (z.B. Kombination aus rotation und flip) (aber abschaltbar!)
+5. Evtl. Möglichkeiten überlegen mehrere "gecroppte" Nii-Files zu einem neuen Nii zusammenzusetzen
 (z.B. 4 Niftys vierteln und dann zu einem neuen zusammensetzen)
 
 erledigte To-Do's:
+- "Skew"-Augmentation einbauen
 -  Rotationsache zufällig wählen (bisher wird immer über y gedreht) 
 - Möglichkeit wahlweise Augmentations aus dem "Pool" der augmentation-Funktion zu entfernen oder hinzuzufügen -> gelöst mittels Whitelist
 - Zufallsfaktor in die einzelnen Augmentierungen reinbringen (z.B. Winkel bei rotation) -> random float für Winkel
