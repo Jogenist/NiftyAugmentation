@@ -10,6 +10,7 @@ from scipy.ndimage import shift
 from rotations import x_rotmat  # from rotations.py
 from rotations import y_rotmat  # from rotations.py
 from rotations import z_rotmat  # from rotations.py
+from skimage.transform import resize
 import nibabel as nib
 import os
 import random as rm
@@ -191,8 +192,26 @@ def augmentation(aug_int, file_int):
         plt.show()
         i = i + 1
         aug_str = "blured"
-    # -------------------------------------NO AUGMENTATION-----------------------------------------------
+    # -------------------------------------Random Crop and Rezize-----------------------------------------------
     if aug_int == 6:
+        print("---Crop & Resize---")
+        i = 10  # start at layer 10
+        K = np.empty(Block_Size)
+        P = np.empty(Block_Size)
+        for n in range(Img_dataset[file_int].shape[2]):         # go through each nifty slice
+            crop_k = Img_dataset[file_int][16:48,16:48, n]
+            crop_p = Img_dataset[file_int][16:48, 16:48, n]
+            crop_resize_k = resize(crop_k, (64,64))
+            crop_resize_p = resize(crop_p, (64,64))
+            K[:, :, n] = crop_resize_k                            # append skewed slice to numpy array (image)
+            P[:, :, n] = crop_resize_p
+        print(K.shape)
+        plt.imshow(K[:, i])
+        plt.show()
+        i = i + 1
+        aug_str = "crop & resize"
+    # -------------------------------------NO AUGMENTATION-----------------------------------------------
+    if aug_int == 7:
         print("---no augmentation---")
         i = 10  # start at layer 10
         K = Img_dataset[file_int]
@@ -214,7 +233,7 @@ for files in range(len(Img_dataset)):
     print(Aug_rand)
     print(Aug_Whtlst[Aug_rand])
     print(files)
-    augmentation(Aug_rand, files)
+    augmentation(6, files)
 
 
 
