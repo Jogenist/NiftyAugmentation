@@ -1,12 +1,11 @@
 import numpy as np
-# Comment
 np.set_printoptions(precision=4)  # print arrays to 4DP (float point precision, round to 4 digits)
 import matplotlib.pyplot as plt
-
 # gray colormap and nearest neighbor interpolation by default
 plt.rcParams['image.cmap'] = 'gray'
 plt.rcParams['image.interpolation'] = 'nearest'
 from scipy.ndimage import affine_transform
+from scipy.ndimage.interpolation import geometric_transform
 from scipy.ndimage import shift
 from rotations import x_rotmat  # from rotations.py
 from rotations import y_rotmat  # from rotations.py
@@ -14,12 +13,11 @@ from rotations import z_rotmat  # from rotations.py
 import nibabel as nib
 import os
 import random as rm
-from random import randrange
+
 
 # ----------------------------------------------------------------------------
 DATADIR = "Sample Data"  # Data directory
-img_height = 64  # Variables
-img_width = 64
+Block_Size = [64, 64, 64]
 Img_dataset = []
 Lab_dataset = []
 Img_str_lst = []  # Image Structure List?
@@ -28,7 +26,7 @@ Lab_str_lst = []  # Laboratory Structure List?
 # ----------------------------------------------------------------------------
 # Select augmentation here:
 
-Aug_Whtlst = ["rotate", "scale", "flip", "translate", "blur", "no augmentation"]
+Aug_Whtlst = ["rotate", "scale", "flip", "translate", "skew", "blur", "no augmentation"]
 
 # ----------------------------------------------------------------------------
 # load all nii image files from datadir in dataset
@@ -149,20 +147,38 @@ def augmentation(aug_int, file_int):
         plt.show()
         i = i + 1
         aug_str = "translated"
-    # -------------------------------------SHIFT----------------------------------------------- (not working i guess)
-    if aug_int == 10:  # shift is not working, therefore it cannot be reached as random augmentation
-        print("---shift---")
-        i = 10  # start at layer 10
-        # order=1 for linear interpolation
-        K = shift(Img_dataset[file_int], 1, order=1)
-        P = shift(Lab_dataset[file_int], 1, order=1)
-        print(K.shape)
-        plt.imshow(K[:, i])
-        plt.show()
-        i = i + 1
-        aug_str = "shifted"
-    # -------------------------------------BLUR-----------------------------------------------
+    # -------------------------------------SKEW-----------------------------------------------
     if aug_int == 4:
+        print("---skew---")
+        i = 10  # start at layer 10
+        K = np.empty(Block_Size)
+        P = np.empty(Block_Size)
+        dl = rm.randrange(5, 40)  # skew angle
+        print("Skew Angle: ", dl)
+        for n in range(Img_dataset[file_int].shape[2]):         # go through each nifty slice
+            h, l = Img_dataset[file_int][:,:,n].shape           # get shape of 2D Image of this nifty slice
+
+            def mapping(lc):                                    # komplizierter shit
+                l, c = lc
+                dec = (dl * (l - h)) / h
+                return l, c + dec
+
+            def crop_center(img, cropx, cropy):
+                y, x = img.shape
+                startx = x // 2 - (cropx // 2)
+                starty = y // 2 - (cropy // 2)
+                return img[starty:starty + cropy, startx:startx + cropx]
+
+            skew_k = geometric_transform(Img_dataset[file_int][:, :, n], mapping, (h, l + dl), order=5, mode='nearest') # Skew the current slice
+            skew_p = geometric_transform(Lab_dataset[file_int][:, :, n], mapping, (h, l + dl), order=5, mode='nearest')
+            skew_crop_k = crop_center(skew_k,64, 64)            # crop skewed image to 64,64
+            skew_crop_p = crop_center(skew_p, 64, 64)           # crop skewed label to 64,64
+            K[:, :, n] = skew_crop_k                            # append skewed slice to numpy array (image)
+            P[:, :, n] = skew_crop_p                            # append skewed slice to numpy array (segmenation)
+        i = i + 1
+        aug_str = "skewed"
+    # -------------------------------------BLUR-----------------------------------------------
+    if aug_int == 5:
         print("---blur---")
         i = 10  # start at layer 10
         translation = [-0.5, 0, 0.5]  # Translation from I to J [y,z,x]
@@ -176,7 +192,7 @@ def augmentation(aug_int, file_int):
         i = i + 1
         aug_str = "blured"
     # -------------------------------------NO AUGMENTATION-----------------------------------------------
-    if aug_int == 5:
+    if aug_int == 6:
         print("---no augmentation---")
         i = 10  # start at layer 10
         K = Img_dataset[file_int]
@@ -199,3 +215,7 @@ for files in range(len(Img_dataset)):
     print(Aug_Whtlst[Aug_rand])
     print(files)
     augmentation(Aug_rand, files)
+
+
+
+
