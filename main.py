@@ -27,7 +27,7 @@ Lab_str_lst = []  # Laboratory Structure List?
 # ----------------------------------------------------------------------------
 # Select augmentation here:
 
-Aug_Whtlst = ["rotate", "scale", "flip", "translate", "skew", "blur", "no augmentation"]
+Aug_Whtlst = ["rotate", "scale", "flip", "translate", "skew", "blur", "crop&resize" "no augmentation"]
 
 # ----------------------------------------------------------------------------
 # load all nii image files from datadir in dataset
@@ -233,7 +233,7 @@ for files in range(len(Img_dataset)):
     print(Aug_rand)
     print(Aug_Whtlst[Aug_rand])
     print(files)
-    augmentation(6, files)
+    augmentation(Aug_rand, files)
 
 
 
