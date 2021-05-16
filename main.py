@@ -29,7 +29,7 @@ Lab_str_lst = []  # Laboratory Structure List?
 # ----------------------------------------------------------------------------
 # Select augmentation here:
 
-Aug_Whtlst = ["rotate", "scale", "flip", "translate", "skew", "blur", "crop&resize", "elastic distortion",
+Aug_Whtlst = ["rotate", "scale", "flip", "translate", "skew", "blur", "crop&resize", "crop&patch", "elastic distortion",
               "random erasing", "no augmentation"]
 
 
@@ -107,8 +107,6 @@ def augmentation(aug_int, file_int):
         print("---rotate---")
         """
         Simple Image Rotation as compared in [O'Gara2019].
-
-
         [O'Gara2019] O'Gara, McGuinness, "Comparing Data Augmentation Strategies for Deep Image Classification", in
         IMVIP 2019 Irish Machine Vision and Image Procession, 2019.       
         """
@@ -194,6 +192,9 @@ def augmentation(aug_int, file_int):
             skew_crop_p = crop_center(skew_p, 64, 64)           # crop skewed label to 64,64
             K[:, :, n] = skew_crop_k                            # append skewed slice to numpy array (image)
             P[:, :, n] = skew_crop_p                            # append skewed slice to numpy array (segmenation)
+        print(K.shape)
+        plt.imshow(K[:, i])
+        plt.show()
         i = i + 1
         aug_str = "skewed"
     # -------------------------------------BLUR-----------------------------------------------
@@ -230,13 +231,46 @@ def augmentation(aug_int, file_int):
         plt.show()
         i = i + 1
         aug_str = "crop_resize"
-    # -------------------------------------ELASTIC DISTORTION-----------------------------------------------
+    # -------------------------------------CROP AND PATCH-----------------------------------------------
     if aug_int == 7:
+        print("---Crop & Patch---")
+        """
+        Image cropping and patching as proposed in [Takahashi2015].
+        [Takahasi2015] Takahashi, Matsubara and Uehara, "Data Augmentation using Random Image Cropping and 
+        Patching for Deep CNNs", in Journal of Latex Class Files, 2015.
+        """
+        i = 10  # start at layer 10
+        K = np.empty(Block_Size)
+        P = np.empty(Block_Size)
+        for n in range(Img_dataset[file_int].shape[2]):  # go through each nifty slice
+            crop_k1 = Img_dataset[file_int][0:32, 0:32, n]      # crop first slice
+            crop_p1 = Img_dataset[file_int][0:32, 0:32, n]
+            crop_k2 = Img_dataset[file_int][32:64, 0:32, n]     # crop second slice
+            crop_p2 = Img_dataset[file_int][32:64, 0:32, n]
+            crop_k3 = Img_dataset[file_int][32:64, 32:64, n]    # crop third slice
+            crop_p3 = Img_dataset[file_int][32:64, 32:64, n]
+            crop_k4 = Img_dataset[file_int][0:32, 32:64, n]     # crop fourth slice
+            crop_p4 = Img_dataset[file_int][0:32, 32:64, n]
+            # rebuild k
+            crop_ka = np.concatenate((crop_k3, crop_k2), axis=0)
+            crop_kb = np.concatenate((crop_k4, crop_k1), axis=0)
+            crop_k = np.concatenate((crop_kb, crop_ka), axis=1)
+            # rebuild p
+            crop_pa = np.concatenate((crop_p3, crop_p2), axis=0)
+            crop_pb = np.concatenate((crop_p4, crop_p1), axis=0)
+            crop_p = np.concatenate((crop_pb, crop_pa), axis=1)
+            K[:, :, n] = crop_k  # append skewed slice to numpy array (image)
+            P[:, :, n] = crop_p
+        print(K.shape)
+        plt.imshow(K[:, i])
+        plt.show()
+        i = i + 1
+        aug_str = "crop_patch"
+    # -------------------------------------ELASTIC DISTORTION-----------------------------------------------
+    if aug_int == 8:
         print("---Elastic Distortion---")
         """
         Elastic deformation as described in [Simard2003].
-
-
         [Simard2003] Simard, Steinkraus and Platt, "Best Practices for
         Convolutional Neural Networks applied to Visual Document Analysis", in
         Proc. of the International Conference on Document Analysis and
@@ -270,12 +304,10 @@ def augmentation(aug_int, file_int):
         i = i + 1
         aug_str = "elastic_distortion"
     # -------------------------------------RANDOM ERASING-----------------------------------------------
-    if aug_int == 8:
+    if aug_int == 9:
         print("---Random Erasing---")
         """
         Random Erasing as compared in [O'Gara2019].
-
-
         [O'Gara2019] O'Gara, McGuinness, "Comparing Data Augmentation Strategies for Deep Image Classification", in
         IMVIP 2019 Irish Machine Vision and Image Procession, 2019.
         """
@@ -295,7 +327,7 @@ def augmentation(aug_int, file_int):
         i = i + 1
         aug_str = "random_erasing"
     # -------------------------------------NO AUGMENTATION-----------------------------------------------
-    if aug_int == 9:
+    if aug_int == 10:
         print("---no augmentation---")
         i = 10  # start at layer 10
         K = Img_dataset[file_int]
@@ -318,7 +350,3 @@ for files in range(len(Img_dataset)):
     print(Aug_Whtlst[Aug_rand])
     print(files)
     augmentation(Aug_rand, files)
-
-
-
-
