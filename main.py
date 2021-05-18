@@ -30,7 +30,7 @@ Lab_str_lst = []  # Laboratory Structure List?
 # Select augmentation here:
 
 Aug_Whtlst = ["rotate", "scale", "flip", "translate", "skew", "blur", "crop&resize", "crop&patch", "elastic distortion",
-              "random erasing", "no augmentation"]
+              "random erasing", "noise", "no augmentation"]
 
 
 
@@ -346,8 +346,33 @@ def augmentation(aug_int, file_int):
         plt.show()
         i = i + 1
         aug_str = "noised"
-    # -------------------------------------NO AUGMENTATION-----------------------------------------------
+
+    # -------------------------------------SCALE-----------------------------------------------
     if aug_int == 11:
+        print("---shear---")
+        """
+        Shear as used in [Hussain].
+        [Hussain] Hussain, Gimenez, Yi, Rubin, "Differential Data Augmentation Techniques for Medical Imaging "in
+        Classification Tasks" from Stanford University, Department of Computer Science & Department of Radiology.       
+        """
+        i = 20  # start at layer 10
+        shear = rm.uniform(0.4, 1)  # random factor
+        M = rotmat(0)
+        #M[0][1] = 1
+        M[1][0] = shear
+        print("M: ", M)
+        print("M2: ", M[0][1])
+        translation = [0, 0, 0]  # Translation from I to J [y,z,x]
+        # order=1 for linear interpolation
+        K = affine_transform(Img_dataset[file_int], M, translation, output_shape=(64, 64, 64), order=1)
+        P = affine_transform(Lab_dataset[file_int], M, translation, output_shape=(64, 64, 64), order=1)
+        print(K.shape)
+        plt.imshow(K[:, i])
+        plt.show()
+        i = i + 1
+        aug_str = "sheared"
+    # -------------------------------------NO AUGMENTATION-----------------------------------------------
+    if aug_int == 12:
         print("---no augmentation---")
         i = 20  # start at layer 10
         K = Img_dataset[file_int]
