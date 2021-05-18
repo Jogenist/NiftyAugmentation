@@ -18,7 +18,7 @@ To-Do:
 3. mehrfache Augmentierungen ermöglichen (z.B. Kombination aus rotation und flip) (aber abschaltbar!)
 4. Evtl. Möglichkeiten überlegen mehrere "gecroppte" Nii-Files zu einem neuen Nii zusammenzusetzen
 (z.B. 4 Niftys vierteln und dann zu einem neuen zusammensetzen)
-5. "Vorführ-Nii" für jede vorhandene Augmentation erzeugen und abspeichern
+
 
 erledigte To-Do's:
 - random crops wirklich random machen
@@ -32,4 +32,4 @@ erledigte To-Do's:
 - 
 Known Issues:
 1. Der Datensatz den wir am 29.04 bekommen haben enthält einzelne Label-Nii-Files die nur eine dimension von 3 haben (normal sind 4) dadurch können die nii-files nicht alle zusammen in ein array geladen werden. Gelöst hab ich es jetzt dadurch, dass ich die files mit dimension = 3 aus dem Sample Data Ordner gelöscht habe. Der Sample Data Ordner der hier hochgeladen ist, enthält jetzt nur noch die Files die funktionieren.
-2. Nibabel hat einen Bug beim Einlesen der Nii-Files, aus irgendeinem Grund speichert er die numpy arrays falsch ab sodass die ersten 5 eingelesenen Nifty's zuerst immer kleiner werden bis das 5 File oval wird. Spätestens ab dem achten eingelesenen File scheint es dann wieder zu funktionieren. 
+2. Manche der Würfel die wir bekommen haben, sind anscheinend schon augmentiert oder zumindest irgendwie manipuliert.
