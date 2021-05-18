@@ -112,9 +112,10 @@ def augmentation(aug_int, file_int):
         """
         angle = rm.uniform(0.1, 0.5)
         print(angle)
-        i = 10  # start at layer 10
+        i = 20  # start at layer 10
         # rotation matrix for rotation of 0.2 radians around x axis
         M = rotmat(angle)
+        print("M: ",M)
         translation = [0, 0, 0]  # Translation from I to J [y,z,x]
         # order=1 for linear interpolation
         K = affine_transform(Img_dataset[file_int], M, translation, output_shape=(64, 64, 64), order=1)
@@ -127,13 +128,19 @@ def augmentation(aug_int, file_int):
     # -------------------------------------SCALE-----------------------------------------------
     if aug_int == 1:
         print("---scale---")
-        i = 10  # start at layer 10
-        # rotation matrix for rotation of 0.2 radians around x axis
-        M = rotmat(0)
+        """
+        Scale as used in [Hussain].
+        [Hussain] Hussain, Gimenez, Yi, Rubin, "Differential Data Augmentation Techniques for Medical Imaging "in
+        Classification Tasks" from Stanford University, Department of Computer Science & Department of Radiology.       
+        """
+        i = 20  # start at layer 10
+        scale = rm.uniform(0.2, 0.9)  #random factor
+        M = rotmat(0)*scale
+        print("M: ",M)
         translation = [0, 0, 0]  # Translation from I to J [y,z,x]
         # order=1 for linear interpolation
-        K = affine_transform(Img_dataset[file_int], M, translation, output_shape=(32, 32, 32), order=1)
-        P = affine_transform(Lab_dataset[file_int], M, translation, output_shape=(32, 32, 32), order=1)
+        K = affine_transform(Img_dataset[file_int], M, translation, output_shape=(64, 64, 64), order=1)
+        P = affine_transform(Lab_dataset[file_int], M, translation, output_shape=(64, 64, 64), order=1)
         print(K.shape)
         plt.imshow(K[:, i])
         plt.show()
@@ -142,7 +149,7 @@ def augmentation(aug_int, file_int):
     # -------------------------------------FLIP-----------------------------------------------
     if aug_int == 2:
         print("---flip---")
-        i = 10  # start at layer 10
+        i = 20  # start at layer 10
         K = np.flip(Img_dataset[file_int], 1)
         P = np.flip(Lab_dataset[file_int], 1)
         print(K.shape)
@@ -153,9 +160,9 @@ def augmentation(aug_int, file_int):
     # -------------------------------------TRANSLATE-----------------------------------------------
     if aug_int == 3:
         print("---translate---")
-        i = 10  # start at layer 10
+        i = 20  # start at layer 10
         translation = [-32.2, 24, -32.2]  # Translation from I to J [y,z,x]
-        M = y_rotmat(0)
+        M = rotmat(0)
         # order=1 for linear interpolation
         K = affine_transform(Img_dataset[file_int], M, translation, output_shape=(64, 64, 64), order=1)
         P = affine_transform(Lab_dataset[file_int], M, translation, output_shape=(32, 32, 32), order=1)
@@ -167,7 +174,7 @@ def augmentation(aug_int, file_int):
     # -------------------------------------SKEW-----------------------------------------------
     if aug_int == 4:
         print("---skew---")
-        i = 10  # start at layer 10
+        i = 20  # start at layer 10
         K = np.empty(Block_Size)
         P = np.empty(Block_Size)
         dl = rm.randrange(5, 40)  # skew angle
@@ -200,7 +207,7 @@ def augmentation(aug_int, file_int):
     # -------------------------------------BLUR-----------------------------------------------
     if aug_int == 5:
         print("---blur---")
-        i = 10  # start at layer 10
+        i = 20  # start at layer 10
         translation = [-0.5, 0, 0.5]  # Translation from I to J [y,z,x]
         M = y_rotmat(0)
         # order=1 for linear interpolation
@@ -214,7 +221,7 @@ def augmentation(aug_int, file_int):
     # -------------------------------------RANDOM CROP AND RESIZE-----------------------------------------------
     if aug_int == 6:
         print("---Crop & Resize---")
-        i = 10  # start at layer 10
+        i = 20  # start at layer 10
         K = np.empty(Block_Size)
         P = np.empty(Block_Size)
         a = rm.randrange(0, 48)  #randomly select starting point of crop
@@ -239,7 +246,7 @@ def augmentation(aug_int, file_int):
         [Takahasi2015] Takahashi, Matsubara and Uehara, "Data Augmentation using Random Image Cropping and 
         Patching for Deep CNNs", in Journal of Latex Class Files, 2015.
         """
-        i = 10  # start at layer 10
+        i = 20  # start at layer 10
         K = np.empty(Block_Size)
         P = np.empty(Block_Size)
         for n in range(Img_dataset[file_int].shape[2]):  # go through each nifty slice
@@ -276,7 +283,7 @@ def augmentation(aug_int, file_int):
         Proc. of the International Conference on Document Analysis and
         Recognition, 2003.
         """
-        i = 10  # start at layer 10
+        i = 20  # start at layer 10
         K = np.empty(Block_Size)
         P = np.empty(Block_Size)
         # ----- use this settings to create art ------
@@ -311,7 +318,7 @@ def augmentation(aug_int, file_int):
         [O'Gara2019] O'Gara, McGuinness, "Comparing Data Augmentation Strategies for Deep Image Classification", in
         IMVIP 2019 Irish Machine Vision and Image Procession, 2019.
         """
-        i = 10  # start at layer 10
+        i = 20  # start at layer 10
         K = np.empty(Block_Size)
         P = np.empty(Block_Size)
         a = rm.randrange(0, 48)                         # randomly select pixels to be erased
@@ -326,10 +333,23 @@ def augmentation(aug_int, file_int):
         plt.show()
         i = i + 1
         aug_str = "random_erasing"
-    # -------------------------------------NO AUGMENTATION-----------------------------------------------
+    # -------------------------------------NOISE-----------------------------------------------
     if aug_int == 10:
+        print("---noise---")
+        i = 20  # start at layer 10
+        print(Img_dataset[file_int])
+        noise = np.random.normal(0, 12, Img_dataset[file_int].shape)
+        K = Img_dataset[file_int] + noise
+        P = Lab_dataset[file_int] + noise
+        print(K.shape)
+        plt.imshow(K[:, i])
+        plt.show()
+        i = i + 1
+        aug_str = "noised"
+    # -------------------------------------NO AUGMENTATION-----------------------------------------------
+    if aug_int == 11:
         print("---no augmentation---")
-        i = 10  # start at layer 10
+        i = 20  # start at layer 10
         K = Img_dataset[file_int]
         P = Lab_dataset[file_int]
         print(K.shape)
