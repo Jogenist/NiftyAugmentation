@@ -30,7 +30,7 @@ Lab_str_lst = []  # Laboratory Structure List?
 # Select augmentation here:
 
 Aug_Whtlst = ["rotate", "scale", "flip", "translate", "skew", "blur", "crop&resize", "crop&patch", "elastic distortion",
-              "random erasing", "noise", "no augmentation"]
+              "random erasing", "noise", "salt&pepper", "no augmentation"]
 
 
 
@@ -47,12 +47,6 @@ for nii in os.listdir(os.getcwd()):
     print(I.shape)
     Img_dataset.append(I)
 Img_dataset = np.asarray(Img_dataset)
-# for i in range(len(Img_dataset)):
-#     print(i)
-#     plt.imshow(Img_dataset[i][:, 10])
-#     plt.show()
-#     # new_image = nib.Nifti1Image(Img_dataset[i], affine=np.eye(4))
-#     # nib.save(new_image,"nii")
 print("------------------------------------")
 
 # load all nii segmentation files from datadir in dataset
@@ -64,7 +58,6 @@ for nii in os.listdir(os.getcwd()):
     nii_data = lab.get_fdata()
     I = nii_data[..., 0]  # I is the first volume
     Lab_dataset.append(I)
-    # print(Lab_dataset.shape)
 Lab_dataset = np.asarray(Lab_dataset)
 print("---------------------------------------")
 
@@ -79,7 +72,7 @@ os.chdir("..")  # go back one directory
 
 # ----------------------------------------------------------------------------
 # random axis roations
-# this function is called when a random axis roatation should be done
+# this function is called when a random axis rotation should be done
 rot_array = [x_rotmat, y_rotmat, z_rotmat]
 
 
@@ -371,8 +364,32 @@ def augmentation(aug_int, file_int):
         plt.show()
         i = i + 1
         aug_str = "sheared"
-    # -------------------------------------NO AUGMENTATION-----------------------------------------------
+    # -------------------------------------SALT & PEPPER-----------------------------------------------
     if aug_int == 12:
+        print("---Salt and Pepper---")
+        print(Img_dataset[file_int])
+        i = 20  # start at layer 10
+        K = np.empty(Block_Size)
+        P = np.empty(Block_Size)
+        a = np.random.randint(0,64,13)  #randomly select pixels for pepper
+        b = np.random.randint(0,64,13)
+        c = np.random.randint(0,64,13)  #randomly select pixels for salt
+        d = np.random.randint(0,64,13)
+        for n in range(Img_dataset[file_int].shape[2]):  # go through each nifty slice
+            for p in range(len(a)):
+                Img_dataset[file_int][a[p], b[p], n] = 1  # apply pepper
+                Lab_dataset[file_int][a[p], b[p], n] = 1
+                Img_dataset[file_int][c[p], d[p], n] = 0  # apply salt
+                Lab_dataset[file_int][c[p], d[p], n] = 0
+                K[:, :, n] = Img_dataset[file_int][:, :, n]
+                P[:, :, n] = Lab_dataset[file_int][:, :, n]
+        print(K.shape)
+        plt.imshow(K[:, :, i])
+        plt.show()
+        i = i + 1
+        aug_str = "salted&peppered"
+    # -------------------------------------NO AUGMENTATION-----------------------------------------------
+    if aug_int == 13:
         print("---no augmentation---")
         i = 20  # start at layer 10
         K = Img_dataset[file_int]
