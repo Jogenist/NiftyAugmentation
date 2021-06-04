@@ -9,14 +9,13 @@ from scipy.ndimage.interpolation import geometric_transform
 from scipy.ndimage.interpolation import map_coordinates
 from scipy.ndimage.filters import gaussian_filter
 from scipy.ndimage import shift
-from rotations import x_rotmat  # from rotations.py
-from rotations import y_rotmat  # from rotations.py
-from rotations import z_rotmat  # from rotations.py
+
 from skimage.transform import resize
 import nibabel as nib
 import os
 import random as rm
-
+import config_augmentation as augConfig
+import Nifty_Augmentation as aug
 
 # ----------------------------------------------------------------------------
 DATADIR = "Sample Data"  # Data directory
@@ -25,12 +24,6 @@ Img_dataset = []
 Lab_dataset = []
 Img_str_lst = []  # Image Structure List?
 Lab_str_lst = []  # Laboratory Structure List?
-
-# ----------------------------------------------------------------------------
-# Select augmentation here:
-
-Aug_Whtlst = ["rotate", "scale", "flip", "translate", "skew", "blur", "crop&resize", "crop&patch", "elastic distortion",
-              "random erasing", "noise", "salt&pepper", "no augmentation"]
 
 
 
@@ -70,25 +63,7 @@ if Img_dataset.shape != Lab_dataset.shape:  # if amount of images != amount of l
 # ----------------------------------------------------------------------------
 os.chdir("..")  # go back one directory
 
-# ----------------------------------------------------------------------------
-# random axis roations
-# this function is called when a random axis rotation should be done
-rot_array = [x_rotmat, y_rotmat, z_rotmat]
 
-
-def rotmat(matrix):
-    random_axis = rm.randrange(0, 3, 1)
-    print("Ration: ", random_axis)
-    if random_axis == 0:
-        print("x_rotation")
-
-    elif random_axis == 1:
-        print("y_rotation")
-
-    elif (random_axis) == 2:
-        print("z_rotation")
-
-    return rot_array[random_axis](matrix)
 
 
 # ----------------------------------------------------------------------------
@@ -107,7 +82,7 @@ def augmentation(aug_int, file_int):
         print(angle)
         i = 20  # start at layer 10
         # rotation matrix for rotation of 0.2 radians around x axis
-        M = rotmat(angle)
+        M = aug.rotmat(angle)
         print("M: ",M)
         translation = [0, 0, 0]  # Translation from I to J [y,z,x]
         # order=1 for linear interpolation
@@ -128,7 +103,7 @@ def augmentation(aug_int, file_int):
         """
         i = 20  # start at layer 10
         scale = rm.uniform(0.2, 0.9)  #random factor
-        M = rotmat(0)*scale
+        M = aug.rotmat (0)*scale
         print("M: ",M)
         translation = [0, 0, 0]  # Translation from I to J [y,z,x]
         # order=1 for linear interpolation
@@ -155,7 +130,7 @@ def augmentation(aug_int, file_int):
         print("---translate---")
         i = 20  # start at layer 10
         translation = [-32.2, 24, -32.2]  # Translation from I to J [y,z,x]
-        M = rotmat(0)
+        M = aug.rotmat(0)
         # order=1 for linear interpolation
         K = affine_transform(Img_dataset[file_int], M, translation, output_shape=(64, 64, 64), order=1)
         P = affine_transform(Lab_dataset[file_int], M, translation, output_shape=(32, 32, 32), order=1)
@@ -202,7 +177,7 @@ def augmentation(aug_int, file_int):
         print("---blur---")
         i = 20  # start at layer 10
         translation = [-0.5, 0, 0.5]  # Translation from I to J [y,z,x]
-        M = y_rotmat(0)
+        M = aug.rotmat(0)
         # order=1 for linear interpolation
         K = affine_transform(Img_dataset[file_int], M, translation, output_shape=(64, 64, 64), order=1)
         P = affine_transform(Lab_dataset[file_int], M, translation, output_shape=(64, 64, 64), order=1)
@@ -350,7 +325,7 @@ def augmentation(aug_int, file_int):
         """
         i = 20  # start at layer 10
         shear = rm.uniform(0.4, 1)  # random factor
-        M = rotmat(0)
+        M = aug.rotmat(0)
         #M[0][1] = 1
         M[1][0] = shear
         print("M: ", M)
@@ -407,8 +382,8 @@ def augmentation(aug_int, file_int):
 
 
 for files in range(len(Img_dataset)):
-    Aug_rand = rm.randrange(len(Aug_Whtlst))
+    Aug_rand = rm.randrange(len(augConfig.Aug_Whtlst))
     print(Aug_rand)
-    print(Aug_Whtlst[Aug_rand])
+    print(augConfig.Aug_Whtlst[Aug_rand])
     print(files)
     augmentation(Aug_rand, files)
