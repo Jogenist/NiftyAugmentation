@@ -21,3 +21,75 @@ def rotmat(matrix):
         print("z_rotation")
 
     return rot_array[random_axis](matrix)
+
+# -------------------------------------ROTATE-----------------------------------------------
+def rotate(file_int):
+    print("---rotate---")
+
+    # -------------------------------------SCALE-----------------------------------------------
+
+
+def scale(file_int):
+    print("---scale---")
+
+
+# -------------------------------------FLIP-----------------------------------------------
+def flip(file_int):
+    print("---flip---")
+
+
+
+# -------------------------------------TRANSLATE-----------------------------------------------
+def translate(file_int):
+    print("---translate---")
+
+
+
+# -------------------------------------SKEW-----------------------------------------------
+def skew(file_int):
+    print("---skew---")
+
+
+# -------------------------------------BLUR-----------------------------------------------
+def blur(file_int):
+    print("---blur---")
+
+
+
+# -------------------------------------RANDOM CROP AND RESIZE-----------------------------------------------
+def cropAndResize(file_int):
+    print("---Crop & Resize---")
+
+
+# -------------------------------------CROP AND PATCH-----------------------------------------------
+def cropAndPatch(file_int):
+    print("---Crop & Patch---")
+
+
+# -------------------------------------ELASTIC DISTORTION-----------------------------------------------
+def elasticDistortion(file_int):
+    print("---Elastic Distortion---")
+
+
+# -------------------------------------RANDOM ERASING-----------------------------------------------
+def randomErasing(file_int):
+    print("---Random Erasing---")
+
+
+# -------------------------------------NOISE-----------------------------------------------
+def noise(file_int):
+    print("---noise---")
+
+
+# -------------------------------------SCALE-----------------------------------------------
+def shear(file_int):
+    print("---shear---")
+
+
+# -------------------------------------SALT & PEPPER-----------------------------------------------
+def saltAndPepper(file_int):
+    print("---Salt and Pepper---")
+
+def noAugmentation(file_int):
+    print("---no augmentation---")
+
