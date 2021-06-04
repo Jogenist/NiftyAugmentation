@@ -28,63 +28,84 @@ Aug_Whtlst = {"rotate": 1,
 Block_Size = [64, 64, 64]
 
 # ----------------------------------------------------------------------------
-# Select augmentation here:
-Augmentation_Config ={
-    "rotate": {
-        "active": 0
-    },
-    "scale": {
-        "active": 1
-    },
-    "flip":{
-       "active": 1
-    },
-    "translate":{
-        "active": 1
-    },
-    "skew": {
-        "active": 1
-    },
-    "blur": {
-        "active": 1
-    },
-    "cropAndResize": {
-        "active": 1
-    },
-    "cropAndPatch": {
-        "active": 1
-    },
-    "elasticDistortion": {
-        "active": 1
-    },
-    "randomErasing": {
-        "active": 1
-    },
-    "noise": {
-        "active": 1
-    },
-    "saltAndPepper": {
-        "active": 1
-    },
-    # .
-    # .
-    # .
-    # add your new method here
-    "no augmentation": {
-        "active": 1
-    }
+# Setting for Augmentation
+
+rotate = {
+    "angleMin": 0, #Degree
+    "angleMax": 10, #Degree
 }
 
-# augmentationList = []
-#
-#
-# def augmentation_list():
-#     global augmentationList
-#     for x in Aug_Whtlst:
-#         if Aug_Whtlst[x]:
-#             augmentationList.append(x)
-#
-# augmentation_list()
-# print(augmentationList)
+scale = {
+    "Min": 0.2,
+    "Max": 0.5
+}
+
+
+flip = {
+    "Min": 0.2,
+    "Max": 0.5
+}
+
+
+translate = {
+    "Min": 0.2,
+    "Max": 0.5
+}
+
+
+skew = {
+    "Min": 0.2,
+    "Max": 0.5
+}
+
+
+blur = {
+    "Min": 0.2,
+    "Max": 0.5
+}
+
+cropAndResize = {
+    "Min": 0.2,
+    "Max": 0.5
+}
+
+cropAndPatch = {
+    "Min": 0.2,
+    "Max": 0.5
+}
+
+
+elasticDistortion = {
+    "Min": 0.2,
+    "Max": 0.5
+}
+
+
+randomErasing = {
+    "Min": 0.2,
+    "Max": 0.5
+}
+
+
+noise = {
+    "Min": 0.2,
+    "Max": 0.5
+}
+
+saltAndPepper = {
+    "Min": 0.2,
+    "Max": 0.5
+}
+# .
+# .
+# add your new method here
+noAugmentation = {
+    "Min": 0.2,
+    "Max": 0.5
+}
+
+
+
+
 
 

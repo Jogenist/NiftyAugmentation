@@ -1,5 +1,6 @@
 import random as rm
 import numpy as np
+import math
 import matplotlib.pyplot as plt
 from scipy.ndimage import affine_transform
 from rotations import x_rotmat  # from rotations.py
@@ -40,7 +41,7 @@ def rotate(Img_dataset,Lab_dataset, file_int):
     [O'Gara2019] O'Gara, McGuinness, "Comparing Data Augmentation Strategies for Deep Image Classification", in
     IMVIP 2019 Irish Machine Vision and Image Procession, 2019.       
     """
-    angle = rm.uniform(0.1, 0.5)
+    angle = rm.uniform(augConfig.rotate["angleMin"]*math.pi/180, augConfig.rotate["angleMax"]*math.pi/180)
     print(angle)
     i = 20  # start at layer 10
     # rotation matrix for rotation of 0.2 radians around x axis
@@ -57,6 +58,7 @@ def rotate(Img_dataset,Lab_dataset, file_int):
     plt.show()
     i = i + 1
     aug_str = "rotated"
+    return file_int, aug_str
     # -------------------------------------SCALE-----------------------------------------------
 
 
@@ -68,7 +70,7 @@ def scale(Img_dataset,Lab_dataset, file_int):
     Classification Tasks" from Stanford University, Department of Computer Science & Department of Radiology.       
     """
     i = 20  # start at layer 10
-    scale = rm.uniform(0.2, 0.9)  # random factor
+    scale = rm.uniform(augConfig.scale["Min"], augConfig.scale["Max"])  # random factor
     M = rotmat(0) * scale
     print("M: ", M)
     translation = [0, 0, 0]  # Translation from I to J [y,z,x]
@@ -82,21 +84,22 @@ def scale(Img_dataset,Lab_dataset, file_int):
     plt.show()
     i = i + 1
     aug_str = "scaled"
-
+    return file_int, aug_str
 # -------------------------------------FLIP-----------------------------------------------
 def flip(Img_dataset,Lab_dataset, file_int):
     print("---flip---")
     i = 20  # start at layer 10
     global K
     global P
-    K = np.flip(Img_dataset[file_int], 1)
-    P = np.flip(Lab_dataset[file_int], 1)
+    flipAxis = rm.randrange(0,1,1)
+    K = np.flip(Img_dataset[file_int], flipAxis)
+    P = np.flip(Lab_dataset[file_int], flipAxis)
     print(K.shape)
     plt.imshow(K[:, i])
     plt.show()
     i = i + 1
     aug_str = "flipped"
-
+    return file_int, aug_str
 # -------------------------------------TRANSLATE-----------------------------------------------
 def translate(Img_dataset,Lab_dataset, file_int):
     print("---translate---")
@@ -113,7 +116,7 @@ def translate(Img_dataset,Lab_dataset, file_int):
     plt.show()
     i = i + 1
     aug_str = "translated"
-
+    return file_int, aug_str
 
 # -------------------------------------SKEW-----------------------------------------------
 def skew(Img_dataset,Lab_dataset, file_int):
@@ -152,7 +155,7 @@ def skew(Img_dataset,Lab_dataset, file_int):
     plt.show()
     i = i + 1
     aug_str = "skewed"
-
+    return file_int, aug_str
 
 # -------------------------------------BLUR-----------------------------------------------
 def blur(Img_dataset, Lab_dataset, file_int):
@@ -170,7 +173,7 @@ def blur(Img_dataset, Lab_dataset, file_int):
     plt.show()
     i = i + 1
     aug_str = "blured"
-
+    return file_int, aug_str
 
 # -------------------------------------RANDOM CROP AND RESIZE-----------------------------------------------
 def cropAndResize(Img_dataset, Lab_dataset, file_int):
@@ -195,7 +198,7 @@ def cropAndResize(Img_dataset, Lab_dataset, file_int):
     plt.show()
     i = i + 1
     aug_str = "crop_resize"
-
+    return file_int, aug_str
 
 # -------------------------------------CROP AND PATCH-----------------------------------------------
 def cropAndPatch(Img_dataset, Lab_dataset, file_int):
@@ -234,7 +237,7 @@ def cropAndPatch(Img_dataset, Lab_dataset, file_int):
     plt.show()
     i = i + 1
     aug_str = "crop_patch"
-
+    return file_int, aug_str
 
 # -------------------------------------ELASTIC DISTORTION-----------------------------------------------
 def elasticDistortion(Img_dataset, Lab_dataset, file_int):
@@ -277,7 +280,7 @@ def elasticDistortion(Img_dataset, Lab_dataset, file_int):
     plt.show()
     i = i + 1
     aug_str = "elastic_distortion"
-
+    return file_int, aug_str
 
 # -------------------------------------RANDOM ERASING-----------------------------------------------
 def randomErasing(Img_dataset, Lab_dataset, file_int):
@@ -304,7 +307,7 @@ def randomErasing(Img_dataset, Lab_dataset, file_int):
     plt.show()
     i = i + 1
     aug_str = "random_erasing"
-
+    return file_int, aug_str
 
 # -------------------------------------NOISE-----------------------------------------------
 def noise(Img_dataset, Lab_dataset, file_int):
@@ -321,7 +324,7 @@ def noise(Img_dataset, Lab_dataset, file_int):
     plt.show()
     i = i + 1
     aug_str = "noised"
-
+    return file_int, aug_str
 
 # -------------------------------------SCALE-----------------------------------------------
 def shear(Img_dataset, Lab_dataset, file_int):
@@ -349,7 +352,7 @@ def shear(Img_dataset, Lab_dataset, file_int):
     plt.show()
     i = i + 1
     aug_str = "sheared"
-
+    return file_int, aug_str
 
 # -------------------------------------SALT & PEPPER-----------------------------------------------
 def saltAndPepper(Img_dataset, Lab_dataset, file_int):
@@ -377,7 +380,7 @@ def saltAndPepper(Img_dataset, Lab_dataset, file_int):
     plt.show()
     i = i + 1
     aug_str = "salted&peppered"
-
+    return file_int, aug_str
 
 # -------------------------------------NO AUGMENTATION-----------------------------------------------
 def noAugmentation(Img_dataset, Lab_dataset, file_int):

@@ -6,13 +6,7 @@ import matplotlib.pyplot as plt
 # gray colormap and nearest neighbor interpolation by default
 plt.rcParams['image.cmap'] = 'gray'
 plt.rcParams['image.interpolation'] = 'nearest'
-from scipy.ndimage import affine_transform
-from scipy.ndimage.interpolation import geometric_transform
-from scipy.ndimage.interpolation import map_coordinates
-from scipy.ndimage.filters import gaussian_filter
-from scipy.ndimage import shift
 
-from skimage.transform import resize
 import nibabel as nib
 import os
 import random as rm
@@ -81,19 +75,19 @@ def augmentation_list():
 
 
 def augmentation(image_dataset, lab_dataset):
+    global K
+    global P
     for files in range(len(image_dataset)):
-        rm.choice(augmentationList)(image_dataset,lab_dataset,files)
-    # new_image = nib.Nifti1Image(K, affine=np.eye(4))
-    # nib.save(new_image, Img_str_lst[file_int] + '_' + aug_str + '.nii')
-    # new_label = nib.Nifti1Image(P, affine=np.eye(4))
-    # nib.save(new_label, Lab_str_lst[file_int] + '_' + aug_str + '.nii')
+        file_int, aug_str = rm.choice(augmentationList)(image_dataset,lab_dataset,files)
+        print(aug_str)
+        # new_image = nib.Nifti1Image(K, affine=np.eye(4))
+        # nib.save(new_image, Img_str_lst[file_int] + '_' + aug_str + '.nii')
+        # new_label = nib.Nifti1Image(P, affine=np.eye(4))
+        # nib.save(new_label, Lab_str_lst[file_int] + '_' + aug_str + '.nii')
 
 
 augmentation_list()
 augmentation(Img_dataset,Lab_dataset)
-# for files in range(len(Img_dataset)):
-#     Aug_rand = rm.randrange(len(augConfig.Aug_Whtlst))
-#     print(Aug_rand)
-#     print(augConfig.Aug_Whtlst[Aug_rand])
-#     print(files)
-#     augmentation(Aug_rand, files)
+
+
+
