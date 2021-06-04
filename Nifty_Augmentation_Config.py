@@ -5,24 +5,28 @@
 #
 
 Aug_Whtlst = {"rotate": 1,
-              "scale": 0,
-              "flip": 0,
-              "translate": 0,
-              "skew": 0,
-              "blur": 0,
-              "cropAndResize": 0,
-              "cropAndPatch": 0,
-              "elasticDistortion": 0,
-              "randomErasing": 0,
-              "noise": 0,
-              "shear": 0,
-              "saltAndPepper": 0,
+              "scale": 1,
+              "flip": 1,
+              "translate": 1,
+              "skew": 1,
+              "blur": 1,
+              "cropAndResize": 1,
+              "cropAndPatch": 1,
+              "elasticDistortion": 1,
+              "randomErasing": 1,
+              "noise": 1,
+              "shear": 1,
+              "saltAndPepper": 1,
               #.
               #.
               #.
               # add your new method here
               "noAugmentation": 1,
 }
+
+#Block Size
+Block_Size = [64, 64, 64]
+
 # ----------------------------------------------------------------------------
 # Select augmentation here:
 Augmentation_Config ={
