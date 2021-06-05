@@ -60,9 +60,7 @@ os.chdir("..")  # go back one directory
 
 # ----------------------------------------------------------------------------
 
-# augment given nii file
-K = 0
-P = 0
+
 
 
 
@@ -75,15 +73,15 @@ def augmentation_list():
 
 
 def augmentation(image_dataset, lab_dataset):
-    global K
-    global P
+
     for files in range(len(image_dataset)):
+        aug
         file_int, aug_str = rm.choice(augmentationList)(image_dataset,lab_dataset,files)
         print(aug_str)
-        # new_image = nib.Nifti1Image(K, affine=np.eye(4))
-        # nib.save(new_image, Img_str_lst[file_int] + '_' + aug_str + '.nii')
-        # new_label = nib.Nifti1Image(P, affine=np.eye(4))
-        # nib.save(new_label, Lab_str_lst[file_int] + '_' + aug_str + '.nii')
+        new_image = nib.Nifti1Image(aug.K, affine=np.eye(4))
+        nib.save(new_image, Img_str_lst[file_int] + '_' + aug_str + '.nii')
+        new_label = nib.Nifti1Image(aug.P, affine=np.eye(4))
+        nib.save(new_label, Lab_str_lst[file_int] + '_' + aug_str + '.nii')
 
 
 augmentation_list()

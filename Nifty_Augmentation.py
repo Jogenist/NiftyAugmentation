@@ -12,7 +12,10 @@ from skimage.transform import resize
 from scipy.ndimage.interpolation import map_coordinates
 from scipy.ndimage.filters import gaussian_filter
 
-
+# Global storage
+# augment given nii file
+K = 0
+P = 0
 # ----------------------------------------------------------------------------
 # random axis roations
 # this function is called when a random axis rotation should be done
@@ -394,4 +397,5 @@ def noAugmentation(Img_dataset, Lab_dataset, file_int):
     plt.imshow(K[:, i])
     plt.show()
     i = i + 1
-    return ()  # dont save unaugmented image, therefore leave here
+    aug_str ="noAugmentation"
+    return file_int, aug_str  # dont save unaugmented image, therefore leave here
