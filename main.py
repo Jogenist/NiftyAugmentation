@@ -1,12 +1,20 @@
+"""
+main.py
+
+This file initiates the nifty augmentation.
+First it reads all nifty-images and segmentations as numpy arrays.
+Then it randomly applies augmentations from Nifty_Augmentation.py to the files and saves them as new a nifty.
+
+06/2021
+"""
+
+# ----------------------------------------------------------------------------
+# import libraries
 import numpy as np
-
-np.set_printoptions(precision=4)  # print arrays to 4DP (float point precision, round to 4 digits)
+np.set_printoptions(precision=4)                                                                                        # print arrays to 4DP (float point precision, round to 4 digits)
 import matplotlib.pyplot as plt
-
-# gray colormap and nearest neighbor interpolation by default
-plt.rcParams['image.cmap'] = 'gray'
+plt.rcParams['image.cmap'] = 'gray'                                                                                     # gray colormap and nearest neighbor interpolation by default
 plt.rcParams['image.interpolation'] = 'nearest'
-
 import nibabel as nib
 import os
 import random as rm
@@ -14,58 +22,52 @@ import Nifty_Augmentation_Config as augConfig
 import Nifty_Augmentation as aug
 
 # ----------------------------------------------------------------------------
-DATADIR = "Sample Data"  # Data directory
+DATADIR = "Sample Data"                                                                                                 # Data directory
 Block_Size = [64, 64, 64]
 Img_dataset = []
 Lab_dataset = []
-Img_str_lst = []  # Image Structure List?
-Lab_str_lst = []  # Laboratory Structure List?
+Img_str_lst = []                                                                                                        # Image string list
+Lab_str_lst = []                                                                                                        # Label string list
 augmentationList = []
 
 # ----------------------------------------------------------------------------
-# load all nii image files from datadir in dataset
-os.chdir(DATADIR + "/Image")  # change the current working directory to DATADIR
+os.chdir(DATADIR + "/Image")                                                                                            # change the current working directory to DATADIR
 counter = 0
-for nii in os.listdir(os.getcwd()):
-    Img_str_lst.append(nii[:-4])  # append tha images to a list without the file ending ( [:-4] removes the .nii)
-    img = nib.load(nii)  # load nifty file
-    nii_data = img.get_fdata()  # get the data as an float array
-    # print(nii_data)
-    I = nii_data[..., 0]  # I is the first volume
+for nii in os.listdir(os.getcwd()):                                                                                     # load all nii image files from datadir in dataset
+    Img_str_lst.append(nii[:-4])                                                                                        # append the images to a list without the file ending ( [:-4] removes the .nii)
+    img = nib.load(nii)                                                                                                 # load nifty file
+    nii_data = img.get_fdata()                                                                                          # get the data as an float array
+    I = nii_data[..., 0]                                                                                                # I is the first volume
     print(I.shape)
     Img_dataset.append(I)
 Img_dataset = np.asarray(Img_dataset)
 print("------------------------------------")
 
-# load all nii segmentation files from datadir in dataset
-os.chdir("..")  # go back one directory
+
+os.chdir("..")                                                                                                          # go back one directory
 os.chdir("Label")
-for nii in os.listdir(os.getcwd()):
+for nii in os.listdir(os.getcwd()):                                                                                     # load all nii segmentation files from datadir in dataset
     Lab_str_lst.append(nii[:-4])
     lab = nib.load(nii)
     nii_data = lab.get_fdata()
-    I = nii_data[..., 0]  # I is the first volume
+    I = nii_data[..., 0]                                                                                                # I is the first volume
     Lab_dataset.append(I)
 Lab_dataset = np.asarray(Lab_dataset)
 print("---------------------------------------")
 
-if Img_dataset.shape != Lab_dataset.shape:  # if amount of images != amount of labels => error
+if Img_dataset.shape != Lab_dataset.shape:                                                                              # if amount of images != amount of labels => error
     print("Something went wrong while reading data!")
     print(Img_dataset.shape)
     print(Lab_dataset.shape)
     exit()
 
 # ----------------------------------------------------------------------------
-os.chdir("..")  # go back one directory
+os.chdir("..")                                                                                                          # go back one directory
 
 # ----------------------------------------------------------------------------
 
 
-
-
-
-# Generates a List of all functions which are allowed to use from config file
-def augmentation_list():
+def augmentation_list():                                                                                                # Generates a List of all functions which are allowed to use from config file
     global augmentationList
     for x in augConfig.Aug_Whtlst:
         if augConfig.Aug_Whtlst[x]:
@@ -85,7 +87,7 @@ def augmentation(image_dataset, lab_dataset):
 
 
 augmentation_list()
-augmentation(Img_dataset,Lab_dataset)
+augmentation(Img_dataset, Lab_dataset)
 
 
 
