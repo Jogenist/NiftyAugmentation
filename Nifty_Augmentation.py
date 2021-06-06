@@ -46,7 +46,7 @@ def rotmat(matrix):                                                             
 
 
 # -------------------------------------ROTATE-----------------------------------------------
-def rotate(Img_dataset, Lab_dataset, file_int):
+def rotate():
     print("---rotate---")
     """
     Simple Image Rotation as compared in [O'Gara2019].
@@ -59,19 +59,19 @@ def rotate(Img_dataset, Lab_dataset, file_int):
     print("M: ", M)
     global K
     global P
-    K = affine_transform(Img_dataset[file_int], M, [0, 0, 0], output_shape=(64, 64, 64), order=1)                       # apply rotation matrix as an affine transformation
-    P = affine_transform(Lab_dataset[file_int], M, [0, 0, 0], output_shape=(64, 64, 64), order=1)                       # apply same augmentation to the corresponding segmentation file
+    K = affine_transform(K, M, [0, 0, 0], output_shape=(64, 64, 64), order=1)                       # apply rotation matrix as an affine transformation
+    P = affine_transform(P, M, [0, 0, 0], output_shape=(64, 64, 64), order=1)                       # apply same augmentation to the corresponding segmentation file
     print(K.shape)
     if augConfig.PlotMode:                                                                                              # if PlotMode is On, plot augmented image
         i = 20
         plt.imshow(K[:, i])
         plt.show()
     aug_str = "rotated"                                                                                                 # define augmentation string used for naming the augmented files
-    return file_int, aug_str
+    return  aug_str
 
 
 # -------------------------------------SCALE-----------------------------------------------
-def scale(Img_dataset, Lab_dataset, file_int):
+def scale():
     print("---scale---")
     """
     Scale as used in [Hussain].
@@ -83,55 +83,55 @@ def scale(Img_dataset, Lab_dataset, file_int):
     print("M: ", M)
     global K
     global P
-    K = affine_transform(Img_dataset[file_int], M, [0, 0, 0], output_shape=(64, 64, 64), order=1)                       # apply transformation as an affine transformation
-    P = affine_transform(Lab_dataset[file_int], M, [0, 0, 0], output_shape=(64, 64, 64), order=1)                       # apply same augmentation to the corresponding segmentation file
+    K = affine_transform(K, M, [0, 0, 0], output_shape=(64, 64, 64), order=1)                       # apply transformation as an affine transformation
+    P = affine_transform(P, M, [0, 0, 0], output_shape=(64, 64, 64), order=1)                       # apply same augmentation to the corresponding segmentation file
     print(K.shape)
     if augConfig.PlotMode:                                                                                              # if PlotMode is On, plot augmented image
         i = 20
         plt.imshow(K[:, i])
         plt.show()
     aug_str = "scaled"                                                                                                  # define augmentation string used for naming the augmented files
-    return file_int, aug_str
+    return  aug_str
 
 
 # -------------------------------------FLIP-----------------------------------------------
-def flip(Img_dataset, Lab_dataset, file_int):
+def flip():
     print("---flip---")
     global K
     global P
     flipAxis = rm.randrange(0,1,1)                                                                                      # randomly select flip axis
-    K = np.flip(Img_dataset[file_int], flipAxis)                                                                        # apply transformation as an affine transformation
-    P = np.flip(Lab_dataset[file_int], flipAxis)                                                                        # apply same augmentation to the corresponding segmentation file
+    K = np.flip(K, flipAxis)                                                                        # apply transformation as an affine transformation
+    P = np.flip(P, flipAxis)                                                                        # apply same augmentation to the corresponding segmentation file
     print(K.shape)
     if augConfig.PlotMode:                                                                                              # if PlotMode is On, plot augmented image
         i = 20  # start at layer 10
         plt.imshow(K[:, i])
         plt.show()
     aug_str = "flipped"                                                                                                 # define augmentation string used for naming the augmented files
-    return file_int, aug_str
+    return aug_str
 
 
 # -------------------------------------TRANSLATE-----------------------------------------------
-def translate(Img_dataset, Lab_dataset, file_int):
+def translate():
     print("---translate---")
     translation = [rm.uniform(augConfig.translate["xMin"], augConfig.translate["xMax"]),                                # randomly select translation parameters
                    rm.uniform(augConfig.translate["yMin"], augConfig.translate["yMax"]),
                    rm.uniform(augConfig.translate["zMin"], augConfig.translate["zMax"])]
     global K
     global P
-    K = affine_transform(Img_dataset[file_int], rotmat(0), translation, output_shape=(64, 64, 64), order=1)             # apply translation as an affine transformation
-    P = affine_transform(Lab_dataset[file_int], rotmat(0), translation, output_shape=(32, 32, 32), order=1)             # apply same augmentation to the corresponding segmentation file
+    K = affine_transform(K, rotmat(0), translation, output_shape=(64, 64, 64), order=1)             # apply translation as an affine transformation
+    P = affine_transform(P, rotmat(0), translation, output_shape=(32, 32, 32), order=1)             # apply same augmentation to the corresponding segmentation file
     print(K.shape)
     if augConfig.PlotMode:                                                                                              # if PlotMode is On, plot augmented image
         i = 20
         plt.imshow(K[:, i])
         plt.show()
     aug_str = "translated"                                                                                              # define augmentation string used for naming the augmented files
-    return file_int, aug_str
+    return  aug_str
 
 
 # -------------------------------------SKEW-----------------------------------------------
-def skew(Img_dataset, Lab_dataset, file_int):
+def skew():
     print("---skew---")
     global K
     global P
@@ -140,8 +140,8 @@ def skew(Img_dataset, Lab_dataset, file_int):
     dl = rm.randrange(augConfig.skew["Min"], augConfig.skew["Max"])                                                     # randomly select skew angle
     print("Skew Angle: ", dl)
 
-    for n in range(Img_dataset[file_int].shape[2]):                                                                     # go through each nifty slice
-        h, l = Img_dataset[file_int][:, :, n].shape                                                                     # get shape of 2D Image of this nifty slice
+    for n in range(K.shape[2]):                                                                     # go through each nifty slice
+        h, l = K[:, :, n].shape                                                                     # get shape of 2D Image of this nifty slice
 
         def mapping(lc):                                                                                                # complicated calculations
             l, c = lc
@@ -154,9 +154,9 @@ def skew(Img_dataset, Lab_dataset, file_int):
             starty = y // 2 - (cropy // 2)
             return img[starty:starty + cropy, startx:startx + cropx]
 
-        skew_k = geometric_transform(Img_dataset[file_int][:, :, n], mapping, (h, l + dl), order=5,
+        skew_k = geometric_transform(K[:, :, n], mapping, (h, l + dl), order=5,
                                      mode='nearest')                                                                    # apply skew augmentation as geometric transformation
-        skew_p = geometric_transform(Lab_dataset[file_int][:, :, n], mapping, (h, l + dl), order=5, mode='nearest')     # apply same augmentation to the corresponding segmentation file
+        skew_p = geometric_transform(P[:, :, n], mapping, (h, l + dl), order=5, mode='nearest')     # apply same augmentation to the corresponding segmentation file
         skew_crop_k = crop_center(skew_k, 64, 64)                                                                       # crop skewed image to 64,64
         skew_crop_p = crop_center(skew_p, 64, 64)                                                                       # crop skewed label to 64,64
         K[:, :, n] = skew_crop_k                                                                                        # append skewed slice to numpy array (image)
@@ -167,30 +167,30 @@ def skew(Img_dataset, Lab_dataset, file_int):
         plt.imshow(K[:, i])
         plt.show()
     aug_str = "skewed"                                                                                                  # define augmentation string used for naming the augmented files
-    return file_int, aug_str
+    return aug_str
 
 
 # -------------------------------------BLUR-----------------------------------------------
-def blur(Img_dataset, Lab_dataset, file_int):
+def blur():
     print("---blur---")
     translation = [rm.uniform(augConfig.blur["Min"], augConfig.blur["Max"]), rm.uniform(augConfig.blur["Min"],
                  augConfig.blur["Max"]), rm.uniform(augConfig.blur["Min"], augConfig.blur["Max"])]                      # randomly select translation parameters for bluring
 
     global K
     global P
-    K = affine_transform(Img_dataset[file_int], rotmat(0), translation, output_shape=(64, 64, 64), order=1)             # apply blur as affine transformation
-    P = affine_transform(Lab_dataset[file_int], rotmat(0), translation, output_shape=(64, 64, 64), order=1)             # apply same augmentation to the corresponding segmentation file
+    K = affine_transform(K, rotmat(0), translation, output_shape=(64, 64, 64), order=1)             # apply blur as affine transformation
+    P = affine_transform(P, rotmat(0), translation, output_shape=(64, 64, 64), order=1)             # apply same augmentation to the corresponding segmentation file
     print(K.shape)
     if augConfig.PlotMode:                                                                                              # if PlotMode is On, plot augmented image
         i = 20  # start at layer 10
         plt.imshow(K[:, i])
         plt.show()
     aug_str = "blurred"                                                                                                 # define augmentation string used for naming the augmented files
-    return file_int, aug_str
+    return  aug_str
 
 
 # -------------------------------------RANDOM CROP AND RESIZE-----------------------------------------------
-def cropAndResize(Img_dataset, Lab_dataset, file_int):
+def cropAndResize():
     print("---Crop & Resize---")
     global K
     global P
@@ -199,9 +199,9 @@ def cropAndResize(Img_dataset, Lab_dataset, file_int):
     a = rm.randrange(augConfig.cropAndResize["Min"], augConfig.cropAndResize["Max"])                                    # randomly select starting point of crop
     print("a:", a)
 
-    for n in range(Img_dataset[file_int].shape[2]):                                                                     # go through each nifty slice
-        crop_k = Img_dataset[file_int][a:a + 16, a:a + 16, n]                                                           # crop size is always 16x16
-        crop_p = Lab_dataset[file_int][a:a + 16, a:a + 16, n]
+    for n in range(K.shape[2]):                                                                     # go through each nifty slice
+        crop_k = K[a:a + 16, a:a + 16, n]                                                           # crop size is always 16x16
+        crop_p = P[a:a + 16, a:a + 16, n]
         crop_resize_k = resize(crop_k, (64, 64))
         crop_resize_p = resize(crop_p, (64, 64))
         K[:, :, n] = crop_resize_k                                                                                      # append skewed slice to numpy array (image)
@@ -212,10 +212,10 @@ def cropAndResize(Img_dataset, Lab_dataset, file_int):
         plt.imshow(K[:, i])
         plt.show()
     aug_str = "crop_resize"                                                                                             # define augmentation string used for naming the augmented files
-    return file_int, aug_str
+    return  aug_str
 
 # -------------------------------------CROP AND PATCH-----------------------------------------------
-def cropAndPatch(Img_dataset, Lab_dataset, file_int):
+def cropAndPatch():
     print("---Crop & Patch---")
     """
     Image cropping and patching as proposed in [Takahashi2015].
@@ -226,15 +226,15 @@ def cropAndPatch(Img_dataset, Lab_dataset, file_int):
     global P
     K = np.empty(augConfig.Block_Size)                                                                                  # create empty numpy arrays with size of Nifty-File
     P = np.empty(augConfig.Block_Size)
-    for n in range(Img_dataset[file_int].shape[2]):                                                                     # go through each nifty slice
-        crop_k1 = Img_dataset[file_int][0:32, 0:32, n]                                                                  # crop first slice
-        crop_p1 = Lab_dataset[file_int][0:32, 0:32, n]
-        crop_k2 = Img_dataset[file_int][32:64, 0:32, n]                                                                 # crop second slice
-        crop_p2 = Lab_dataset[file_int][32:64, 0:32, n]
-        crop_k3 = Img_dataset[file_int][32:64, 32:64, n]                                                                # crop third slice
-        crop_p3 = Lab_dataset[file_int][32:64, 32:64, n]
-        crop_k4 = Img_dataset[file_int][0:32, 32:64, n]                                                                 # crop fourth slice
-        crop_p4 = Lab_dataset[file_int][0:32, 32:64, n]
+    for n in range(K.shape[2]):                                                                     # go through each nifty slice
+        crop_k1 = K[0:32, 0:32, n]                                                                  # crop first slice
+        crop_p1 = P[0:32, 0:32, n]
+        crop_k2 = K[32:64, 0:32, n]                                                                 # crop second slice
+        crop_p2 = P[32:64, 0:32, n]
+        crop_k3 = K[32:64, 32:64, n]                                                                # crop third slice
+        crop_p3 = P[32:64, 32:64, n]
+        crop_k4 = K[0:32, 32:64, n]                                                                 # crop fourth slice
+        crop_p4 = P[0:32, 32:64, n]
         # rebuild k
         crop_ka = np.concatenate((crop_k3, crop_k2), axis=0)
         crop_kb = np.concatenate((crop_k4, crop_k1), axis=0)
@@ -251,11 +251,11 @@ def cropAndPatch(Img_dataset, Lab_dataset, file_int):
         plt.imshow(K[:, i])
         plt.show()
     aug_str = "crop_patch"                                                                                              # define augmentation string used for naming the augmented files
-    return file_int, aug_str
+    return  aug_str
 
 
 # -------------------------------------ELASTIC DISTORTION-----------------------------------------------
-def elasticDistortion(Img_dataset, Lab_dataset, file_int):
+def elasticDistortion():
     print("---Elastic Distortion---")
     """
     Elastic deformation as described in [Simard2003].
@@ -273,15 +273,15 @@ def elasticDistortion(Img_dataset, Lab_dataset, file_int):
     print("alpha:", alpha)
     print("sigma: ", sigma)
     random_state = np.random.RandomState(None)
-    for n in range(Img_dataset[file_int].shape[2]):                                                                     # go through each nifty slice
-        shape = Img_dataset[file_int][n].shape
+    for n in range(K.shape[2]):                                                                     # go through each nifty slice
+        shape = K[n].shape
         dx = gaussian_filter((random_state.rand(*shape) * 2 - 1), sigma, mode="constant", cval=0) * alpha
         dy = gaussian_filter((random_state.rand(*shape) * 2 - 1), sigma, mode="constant", cval=0) * alpha
         x, y = np.meshgrid(np.arange(shape[0]), np.arange(shape[1]), indexing='ij')
         indices = np.reshape(x + dx, (-1, 1)), np.reshape(y + dy, (-1, 1))
-        K[:, :, n] = map_coordinates(Img_dataset[file_int][n], indices, order=1).reshape(
+        K[:, :, n] = map_coordinates(K[n], indices, order=1).reshape(
             shape)                                                                                                      # append distorted slice to numpy array (image)
-        P[:, :, n] = map_coordinates(Lab_dataset[file_int][n], indices, order=1).reshape(
+        P[:, :, n] = map_coordinates(P[n], indices, order=1).reshape(
             shape)                                                                                                      # append distorted slice to numpy array (label)
     print(K.shape)
     if augConfig.PlotMode:                                                                                              # if PlotMode is On, plot augmented image
@@ -289,11 +289,11 @@ def elasticDistortion(Img_dataset, Lab_dataset, file_int):
         plt.imshow(K[:, i])
         plt.show()
     aug_str = "elastic_distortion"                                                                                      # define augmentation string used for naming the augmented files
-    return file_int, aug_str
+    return  aug_str
 
 
 # -------------------------------------RANDOM ERASING-----------------------------------------------
-def randomErasing(Img_dataset, Lab_dataset, file_int):
+def randomErasing():
     print("---Random Erasing---")
     """
     Random Erasing as compared in [O'Gara2019].
@@ -306,40 +306,40 @@ def randomErasing(Img_dataset, Lab_dataset, file_int):
     P = np.empty(augConfig.Block_Size)
     a = rm.randrange(augConfig.randomErasing["Min"], augConfig.randomErasing["Max"])                                    # randomly select pixels to be erased
     b = rm.randrange(augConfig.randomErasing["sizeMin"], augConfig.randomErasing["sizeMax"])                            # set size of erased area here
-    for n in range(Img_dataset[file_int].shape[2]):                                                                     # go through each nifty slice
-        Img_dataset[file_int][a:a + b, a:a + b, n] = 0                                                                  # delete values at given location in image (set to 0 -> black)
-        Lab_dataset[file_int][a:a + b, a:a + b, n] = 0
-        K[:, :, n] = Img_dataset[file_int][:, :, n]
-        P[:, :, n] = Lab_dataset[file_int][:, :, n]
+    for n in range(K.shape[2]):                                                                     # go through each nifty slice
+        K[a:a + b, a:a + b, n] = 0                                                                  # delete values at given location in image (set to 0 -> black)
+        P[a:a + b, a:a + b, n] = 0
+        K[:, :, n] = K[:, :, n]
+        P[:, :, n] = P[:, :, n]
     print(K.shape)
     if augConfig.PlotMode:                                                                                              # if PlotMode is On, plot augmented image
         i = 20
         plt.imshow(K[:, i])
         plt.show()
     aug_str = "random_erasing"                                                                                          # define augmentation string used for naming the augmented files
-    return file_int, aug_str
+    return  aug_str
 
 
 # -------------------------------------NOISE-----------------------------------------------
-def noise(Img_dataset, Lab_dataset, file_int):
+def noise():
     print("---noise---")
-    print(Img_dataset[file_int])
-    noise = np.random.normal(augConfig.noise["Min"], augConfig.noise["Max"], Img_dataset[file_int].shape)               # create numpy array filled with random values
     global K
     global P
-    K = Img_dataset[file_int] + noise                                                                                   # add noise numpy array to Nifty numpy array
-    P = Lab_dataset[file_int] + noise
+    print(K)
+    noise = np.random.normal(augConfig.noise["Min"], augConfig.noise["Max"], K.shape)               # create numpy array filled with random values
+    K = K + noise                                                                                   # add noise numpy array to Nifty numpy array
+    P = P + noise
     print(K.shape)
     if augConfig.PlotMode:                                                                                              # if PlotMode is On, plot augmented image
         i = 20
         plt.imshow(K[:, i])
         plt.show()
     aug_str = "noised"                                                                                                  # define augmentation string used for naming the augmented files
-    return file_int, aug_str
+    return  aug_str
 
 
 # -------------------------------------SCALE-----------------------------------------------
-def shear(Img_dataset, Lab_dataset, file_int):
+def shear():
     print("---shear---")
     """
     Shear as used in [Hussain].
@@ -353,55 +353,55 @@ def shear(Img_dataset, Lab_dataset, file_int):
     print("M2: ", M[0][1])
     global K
     global P
-    K = affine_transform(Img_dataset[file_int], M, [0, 0, 0], output_shape=(64, 64, 64), order=1)                       # apply given rotation matrix to nifty-file with affine transformation
-    P = affine_transform(Lab_dataset[file_int], M, [0, 0, 0], output_shape=(64, 64, 64), order=1)                       # apply same augmentation to the corresponding segmentation file
+    K = affine_transform(K, M, [0, 0, 0], output_shape=(64, 64, 64), order=1)                       # apply given rotation matrix to nifty-file with affine transformation
+    P = affine_transform(P, M, [0, 0, 0], output_shape=(64, 64, 64), order=1)                       # apply same augmentation to the corresponding segmentation file
     print(K.shape)
     if augConfig.PlotMode:                                                                                              # if PlotMode is On, plot augmented image
         i = 20
         plt.imshow(K[:, i])
         plt.show()
     aug_str = "sheared"                                                                                                 # define augmentation string used for naming the augmented files
-    return file_int, aug_str
+    return  aug_str
 
 # -------------------------------------SALT & PEPPER-----------------------------------------------
-def saltAndPepper(Img_dataset, Lab_dataset, file_int):
+def saltAndPepper():
     print("---Salt and Pepper---")
-    print(Img_dataset[file_int])
     global K
     global P
+    print(K)
     K = np.empty(augConfig.Block_Size)                                                                                  # create empty numpy arrays with size of Nifty-File
     P = np.empty(augConfig.Block_Size)
     a = np.random.randint(0, 64, augConfig.saltAndPepper["amount"])                                                     # randomly select pixels for pepper
     b = np.random.randint(0, 64, augConfig.saltAndPepper["amount"])
     c = np.random.randint(0, 64, augConfig.saltAndPepper["amount"])                                                     # randomly select pixels for salt
     d = np.random.randint(0, 64, augConfig.saltAndPepper["amount"])
-    for n in range(Img_dataset[file_int].shape[2]):                                                                     # go through each nifty slice
+    for n in range(K.shape[2]):                                                                     # go through each nifty slice
         for p in range(len(a)):
-            Img_dataset[file_int][a[p], b[p], n] = 1                                                                    # apply pepper
-            Lab_dataset[file_int][a[p], b[p], n] = 1
-            Img_dataset[file_int][c[p], d[p], n] = 0                                                                    # apply salt
-            Lab_dataset[file_int][c[p], d[p], n] = 0
-            K[:, :, n] = Img_dataset[file_int][:, :, n]
-            P[:, :, n] = Lab_dataset[file_int][:, :, n]
+            K[a[p], b[p], n] = 1                                                                    # apply pepper
+            P[a[p], b[p], n] = 1
+            K[c[p], d[p], n] = 0                                                                    # apply salt
+            P[c[p], d[p], n] = 0
+            K[:, :, n] = K[:, :, n]
+            P[:, :, n] = P[:, :, n]
     print(K.shape)
     if augConfig.PlotMode:                                                                                              # if PlotMode is On, plot augmented image
         i = 20
         plt.imshow(K[:, i])
         plt.show()
     aug_str = "salted&peppered"                                                                                         # define augmentation string used for naming the augmented files
-    return file_int, aug_str
+    return  aug_str
 
 # -------------------------------------NO AUGMENTATION-----------------------------------------------
-def noAugmentation(Img_dataset, Lab_dataset, file_int):
+def noAugmentation():
     print("---no augmentation---")
     global K
     global P
-    K = Img_dataset[file_int]                                                                                           # save unaugmented file as new numpy array
-    P = Lab_dataset[file_int]
+    K = K                                                                                           # save unaugmented file as new numpy array
+    P = P
     print(K.shape)
     if augConfig.PlotMode:                                                                                              # if PlotMode is On, plot unaugmented image
         i = 20
         plt.imshow(K[:, i])
         plt.show()
     aug_str = "noAugmentation"                                                                                          # define augmentation string used for naming the augmented files
-    return file_int, aug_str                                                                                            # dont save unaugmented image, therefore leave here
+    return  aug_str                                                                                            # dont save unaugmented image, therefore leave here

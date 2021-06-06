@@ -77,13 +77,14 @@ def augmentation_list():                                                        
 def augmentation(image_dataset, lab_dataset):
 
     for files in range(len(image_dataset)):
-        aug
-        file_int, aug_str = rm.choice(augmentationList)(image_dataset,lab_dataset,files)
+        aug.K = image_dataset[files]
+        aug.P = lab_dataset[files]
+        aug_str = rm.choice(augmentationList)()
         print(aug_str)
         new_image = nib.Nifti1Image(aug.K, affine=np.eye(4))
-        nib.save(new_image, Img_str_lst[file_int] + '_' + aug_str + '.nii')
+        nib.save(new_image, Img_str_lst[files] + '_' + aug_str + '.nii')
         new_label = nib.Nifti1Image(aug.P, affine=np.eye(4))
-        nib.save(new_label, Lab_str_lst[file_int] + '_' + aug_str + '.nii')
+        nib.save(new_label, Lab_str_lst[files] + '_' + aug_str + '.nii')
 
 
 augmentation_list()
