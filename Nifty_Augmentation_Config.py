@@ -20,6 +20,7 @@ PlotMode = 1
  then write the function in the Nifty_Augmentation-File under the functions block
  Set here to True or False if you want activate (1) or deactivate (0) a augmentation method.
 """
+Single_Mode_Priority = 1
 Aug_Whtlst = {
     "rotate": 1,
     "scale": 1,
@@ -45,19 +46,41 @@ Aug_Whtlst = {
 Block_Size = [64, 64, 64]
 
 # ----------------------------------------------------------------------------
-# Multiple Augmentation Mode
+# Multiple Augmentation Mode ordered
 """For a bigger data-package you can easily do multiple Augmentations. But in most of the cases the
 final augmented product if to far from reality, that's why you have here the options to choose your own order of
-multiple augmentations."""
+multiple augmentations.
+ """
 # Set the following mode to activate the augmentation:
-# 0 = Deactivated
-# 1 = ordered Augmentations fro Whitelist
-Multiple_Mode_Active = 1
+# False = Deactivated
+# True = ordered Augmentations from ordered Whitelist below
+Multiple_Mode_ordered_Active = True
+Multiple_Mode_Ordered_Priority = 1
 
-# Aug_Whtlst_Multiple = {
-#     {"rotate", "scale", "blur"},
-#     {"flip", "blur"}
-# }
+# Ordered multiple Augmentation
+Aug_Whtlst_Multiple_ordered = [
+    ["rotate", "scale", "flip"],
+    ["rotate", "skew", "cropAndResize"]
+]
+
+# Multiple Augmentations unordered:
+# 
+"""
+For crazy augmentations without any 
+!!!!!!!! This can cause issues and the resolution can be something stange !!!!!!!!!!!!
+
+"""
+# False = Deactivated
+# True = unordered Augmentations for Whitelist
+Multiple_Mode_unordered_Active = True
+Multiple_Mode_Unordered_Priority = 1
+# Set Multiple_Aug_Deep to the number how many functions should be called behind each other
+# deactivated function from whitelist are not called
+Multiple_Aug_Depth_min = 1
+Multiple_Aug_Depth_max = 3
+
+
+
 
 
 # ----------------------------------------------------------------------------

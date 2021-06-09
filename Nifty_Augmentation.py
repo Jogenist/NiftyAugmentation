@@ -32,15 +32,14 @@ rot_array = [x_rotmat, y_rotmat, z_rotmat]
 
 def rotmat(matrix):                                                                                                     # this function is called when a rotation matrix over a random axis (x,y,z) is needed
     random_axis = rm.randrange(0, 3, 1)
-    print("Rotation: ", random_axis)
-    if random_axis == 0:
-        print("x_rotation")
-
-    elif random_axis == 1:
-        print("y_rotation")
-
-    elif random_axis == 2:
-        print("z_rotation")
+    # if random_axis == 0:
+    #     print("x_rotation")
+    #
+    # elif random_axis == 1:
+    #     print("y_rotation")
+    #
+    # elif random_axis == 2:
+    #     print("z_rotation")
 
     return rot_array[random_axis](matrix)
 
@@ -392,6 +391,7 @@ def saltAndPepper():
     return  aug_str
 
 # -------------------------------------NO AUGMENTATION-----------------------------------------------
+# TODO: not working because the file is not written to K
 def noAugmentation():
     print("---no augmentation---")
     global K
