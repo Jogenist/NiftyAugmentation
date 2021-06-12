@@ -167,11 +167,12 @@ def augmentation_multiple_random_depth():
     print("multiple random depth: " , depth)
     x = 0
     aug_str = ""
-    if depth < 0:
+    if depth > 0:
         while x < depth:
             x = x + 1
             aug_str_temp = rm.choice(augmentationFunctions)()
-            aug_str = aug_str + aug_str_temp
+            aug_str = aug_str + aug_str_temp + " "
+            print("multiple: "+ aug_str)
     return aug_str
 
 
@@ -184,14 +185,26 @@ def augmentation_save(files, aug_str):
 
 def augmentation(image_dataset, lab_dataset):
     augmentation_list_generation()
+    counter = 0
+    for files in range(len(image_dataset)):
+        aug.K = image_dataset[files]
+        aug.P = lab_dataset[files]
+        # Separate here
+        aug_str = rm.choice(augmentationList)()
+        print("Counter: ", counter)
+        counter = counter + 1
+        print(aug_str)
+        augmentation_save(files, aug_str)
+
+def augmentation_ret(image_dataset, lab_dataset):
+    augmentation_list_generation()
     for files in range(len(image_dataset)):
         aug.K = image_dataset[files]
         aug.P = lab_dataset[files]
         # Separate here
         aug_str = rm.choice(augmentationList)()
         print(aug_str)
-        augmentation_save(files, aug_str)
-
+        return (files, aug_str)
 
 
 print(augmentationList)
