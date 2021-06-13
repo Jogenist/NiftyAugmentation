@@ -20,7 +20,6 @@ PlotMode = 1
  then write the function in the Nifty_Augmentation-File under the functions block
  Set here to True or False if you want activate (1) or deactivate (0) a augmentation method.
 """
-Single_Mode_Priority = 1
 Aug_Whtlst = {
     "rotate": 1,
     "scale": 1,
@@ -41,9 +40,41 @@ Aug_Whtlst = {
     # add your new method here
     "noAugmentation": 0
 }
-
+# ----------------------------------------------------------------------------
 # Block Size
+"""
+change the block size here, to the resolution of your nii-file
+"""
 Block_Size = [64, 64, 64]
+
+# ----------------------------------------------------------------------------
+# Priority Setting of each Mode
+"""
+set the priority of SINGLE, MULIPLE_ORDERED, MULIPLE_RANDOM to a number how
+often you want to execute this mode, compared to the other mode. 
+Example:
+    1. in Whitelist only rotation an scale are allowed.
+    2. Ordered funtions are: [rotate, scale]
+    3. random deepth is 3 (this makes no sense, because with only 2 functions
+                           and a ordered augmentation, you also allow unordered.
+                           But its only for example)
+    3.  Single_Mode_Priority = 1
+        Multiple_Mode_Ordered_Priority = 1
+        Multiple_Mode_Unordered_Priority = 1
+    --> this leads to a execution of:
+            25 % rotate, 25 % scale, 25 % multiple, 25 % random
+    
+    4. If the priority of random is changed to 2, then we get:
+        Single_Mode_Priority = 1
+        Multiple_Mode_Ordered_Priority = 1
+        Multiple_Mode_Unordered_Priority = 2
+            20 % rotate, 20 % scale, 20 % multiple, 40 % random
+    5. You can also deactivate one of the executions here, if you set the 
+        priority to 0.
+"""
+Single_Mode_Priority = 1
+Multiple_Mode_Ordered_Priority = 1
+Multiple_Mode_Unordered_Priority = 1
 
 # ----------------------------------------------------------------------------
 # Multiple Augmentation Mode ordered
@@ -55,7 +86,6 @@ multiple augmentations.
 # False = Deactivated
 # True = ordered Augmentations from ordered Whitelist below
 Multiple_Mode_ordered_Active = True
-Multiple_Mode_Ordered_Priority = 1
 
 # Ordered multiple Augmentation
 Aug_Whtlst_Multiple_ordered = [
@@ -73,7 +103,6 @@ For crazy augmentations without any
 # False = Deactivated
 # True = unordered Augmentations for Whitelist
 Multiple_Mode_unordered_Active = True
-Multiple_Mode_Unordered_Priority = 1
 # Set Multiple_Aug_Deep to the number how many functions should be called behind each other
 # deactivated function from whitelist are not called
 Multiple_Aug_Depth_min = 1
