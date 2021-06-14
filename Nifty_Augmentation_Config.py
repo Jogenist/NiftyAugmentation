@@ -30,11 +30,10 @@ Aug_Whtlst = {
     "cropAndResize": 0,
     "cropAndPatch": 0,
     "elasticDistortion": 0,
-    "randomErasing": 0,
+    "randomErasing": 1,
     "noise": 0,
     "shear": 0,
     "saltAndPepper": 0,
-    "randomErasing2": 1,
     # .
     # .
     # .

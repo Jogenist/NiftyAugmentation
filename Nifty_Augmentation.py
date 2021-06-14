@@ -307,29 +307,6 @@ def elasticDistortion():
 
 
 # -------------------------------------RANDOM ERASING-----------------------------------------------
-def randomErasing2():
-    print("---Random Erasing---")
-    """
-    Random Erasing as compared in [O'Gara2019].
-    [O'Gara2019] O'Gara, McGuinness, "Comparing Data Augmentation Strategies for Deep Image Classification", in
-    IMVIP 2019 Irish Machine Vision and Image Procession, 2019.
-    """
-    i = 20  # start at layer 10
-    A = np.empty(augConfig.Block_Size)
-    B = np.empty(augConfig.Block_Size)
-    a = rm.randrange(0, 48)  # randomly select pixels to be erased
-    b = 10  # set size of erased area here
-    for n in range(K.shape[2]):  # go through each nifty slice
-        K[a:a + b, a:a + b, n] = 0
-        P[a:a + b, a:a + b, n] = 0
-        A[:, :, n] = K[:, :, n]
-        B[:, :, n] = P[:, :, n]
-    print(A.shape)
-    plt.imshow(A[:, :, i])
-    plt.show()
-    i = i + 1
-    aug_str = "random_erasing"
-
 def randomErasing():
     print("---Random Erasing---")
     """
