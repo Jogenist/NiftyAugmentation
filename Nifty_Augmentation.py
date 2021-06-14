@@ -300,7 +300,7 @@ def elasticDistortion():
     print(K.shape)
     if augConfig.PlotMode:  # if PlotMode is On, plot augmented image
         i = 20
-        plt.imshow(K[:, i])
+        plt.imshow(K[:, :, i])
         plt.show()
     aug_str = "elastic_distortion"  # define augmentation string used for naming the augmented files
     return aug_str
@@ -331,7 +331,7 @@ def randomErasing():
     if augConfig.PlotMode:
         # if PlotMode is On, plot augmented image
         i = 20
-        plt.imshow(K_intern[:, i])
+        plt.imshow(K_intern[:, :, i])
         plt.show()
     aug_str = "random_erasing"
     # define augmentation string used for naming the augmented files
@@ -409,7 +409,7 @@ def saltAndPepper():
     print(K_intern.shape)
     if augConfig.PlotMode:  # if PlotMode is On, plot augmented image
         i = 20
-        plt.imshow(K_intern[:, i])
+        plt.imshow(K_intern[:, :, i])
         plt.show()
     K = K_intern
     P = P_intern
