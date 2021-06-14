@@ -314,7 +314,6 @@ def randomErasing():
     [O'Gara2019] O'Gara, McGuinness, "Comparing Data Augmentation Strategies for Deep Image Classification", in
     IMVIP 2019 Irish Machine Vision and Image Procession, 2019.
     """
-    i = 20  # start at layer 10
     A = np.empty(augConfig.Block_Size)
     B = np.empty(augConfig.Block_Size)
     a = rm.randrange(0, 48)  # randomly select pixels to be erased
@@ -325,9 +324,10 @@ def randomErasing():
         A[:, :, n] = K[:, :, n]
         B[:, :, n] = P[:, :, n]
     print(A.shape)
-    plt.imshow(A[:, :, i])
-    plt.show()
-    i = i + 1
+    if augConfig.PlotMode:
+        i = 20
+        plt.imshow(A[:, :, i])
+        plt.show()
     aug_str = "random_erasing"
 
 
