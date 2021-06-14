@@ -314,8 +314,6 @@ def randomErasing():
     [O'Gara2019] O'Gara, McGuinness, "Comparing Data Augmentation Strategies for Deep Image Classification", in
     IMVIP 2019 Irish Machine Vision and Image Procession, 2019.
     """
-    global K
-    global P
     K_intern = np.empty(augConfig.Block_Size)  # create empty numpy arrays with size of Nifty-File
     P_intern = np.empty(augConfig.Block_Size)
     a = rm.randrange(augConfig.randomErasing["Min"], augConfig.randomErasing["Max"])
