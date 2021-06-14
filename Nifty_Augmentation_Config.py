@@ -22,17 +22,17 @@ PlotMode = 1
 """
 Aug_Whtlst = {
     "rotate": 1,
-    "scale": 0,
-    "flip": 0,
-    "translate": 0,
-    "skew": 0,
-    "blur": 0,
-    "cropAndResize": 0,
-    "cropAndPatch": 0,
-    "elasticDistortion": 0,
-    "randomErasing": 0,
-    "noise": 0,
-    "shear": 0,
+    "scale": 1,
+    "flip": 1,
+    "translate": 1,
+    "skew": 1,
+    "blur": 1,
+    "cropAndResize": 1,
+    "cropAndPatch": 1,
+    "elasticDistortion": 1,
+    "randomErasing": 1,
+    "noise": 1,
+    "shear": 1,
     "saltAndPepper": 1,
     # .
     # .
@@ -72,9 +72,9 @@ Example:
     5. You can also deactivate one of the executions here, if you set the 
         priority to 0.
 """
-Single_Mode_Priority = 1
+Single_Mode_Priority = 0
 Multiple_Mode_Ordered_Priority = 0
-Multiple_Mode_Unordered_Priority = 0
+Multiple_Mode_Unordered_Priority = 1
 
 # ----------------------------------------------------------------------------
 # Multiple Augmentation Mode ordered
@@ -89,8 +89,8 @@ Multiple_Mode_ordered_Active = True
 
 # Ordered multiple Augmentation
 Aug_Whtlst_Multiple_ordered = [
-    ["rotate", "scale", "flip"],
-    ["rotate", "skew", "cropAndResize"]
+    ["flip", "saltAndPepper", "scale", "rotate"],
+
 ]
 
 # Multiple Augmentations unordered:
@@ -105,8 +105,8 @@ For crazy augmentations without any
 Multiple_Mode_unordered_Active = True
 # Set Multiple_Aug_Deep to the number how many functions should be called behind each other
 # deactivated function from whitelist are not called
-Multiple_Aug_Depth_min = 1
-Multiple_Aug_Depth_max = 3
+Multiple_Aug_Depth_min = 8
+Multiple_Aug_Depth_max = 10
 
 
 
@@ -132,8 +132,8 @@ Minimum and maximum factor for scaling.
 Scale factor is randomly selected in this range.
 """
 scale = {
-    "Min": 0.2,
-    "Max": 0.5
+    "Min": 0.8,
+    "Max": 1
 }
 
 # ---- FLIP ----
@@ -164,7 +164,7 @@ Skew angle is randomly selected in this range.
 """
 skew = {
     "Min": 5,
-    "Max": 40
+    "Max": 20
 }
 
 # ---- BLUR ----
@@ -201,8 +201,8 @@ Alpha and Sigma parameters for elastic distortion augmentation.
 Use alpha = 20 and sigma = 1 to create art.
 """
 elasticDistortion = {
-    "alpha": 55,
-    "sigma": 10
+    "alpha": 20,
+    "sigma": 15
 }
 
 # ---- RANDOM ERASE ----
@@ -212,9 +212,9 @@ Pixels are selected in this range.
 Minimum and maximum size of erased area.
 """
 randomErasing = {
-    "Min": 45,
+    "Min": 0,
     "Max": 48,
-    "sizeMin": 9,
+    "sizeMin": 0,
     "sizeMax": 10
 }
 
@@ -225,7 +225,7 @@ Values are selected randomly in this range.
 """
 noise = {
     "Min": 0,
-    "Max": 12
+    "Max": 12,
 }
 
 # ----SHEAR----

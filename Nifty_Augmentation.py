@@ -152,7 +152,7 @@ def augmentation_multiple_random_depth():
         while x < depth:
             x = x + 1
             aug_str_temp = rm.choice(augmentationFunctions)()
-            aug_str = aug_str + aug_str_temp + " "
+            aug_str = aug_str + aug_str_temp
             print("multiple: " + aug_str)
     return aug_str
 

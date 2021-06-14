@@ -123,7 +123,7 @@ def translate():
     print(K.shape)
     if augConfig.PlotMode:  # if PlotMode is On, plot augmented image
         i = 20
-        plt.imshow(K[:, i])
+        plt.imshow(K[:,:, i])
         plt.show()
     aug_str = "translated"  # define augmentation string used for naming the augmented files
     return aug_str
@@ -134,8 +134,8 @@ def skew():
     print("---skew---")
     global K
     global P
-    K = np.empty(augConfig.Block_Size)  # create empty numpy arrays with size of Nifty-File
-    P = np.empty(augConfig.Block_Size)
+    K_intern = np.empty(augConfig.Block_Size)  # create empty numpy arrays with size of Nifty-File
+    P_intern = np.empty(augConfig.Block_Size)
     dl = rm.randrange(augConfig.skew["Min"], augConfig.skew["Max"])  # randomly select skew angle
     print("Skew Angle: ", dl)
 
@@ -153,19 +153,21 @@ def skew():
             starty = y // 2 - (cropy // 2)
             return img[starty:starty + cropy, startx:startx + cropx]
 
-        skew_k = geometric_transform(K[:, :, n], mapping, (h, l + dl), order=5,
-                                     mode='nearest')  # apply skew augmentation as geometric transformation
-        skew_p = geometric_transform(P[:, :, n], mapping, (h, l + dl), order=5,
-                                     mode='nearest')  # apply same augmentation to the corresponding segmentation file
+        skew_k = geometric_transform(K[:, :, n], mapping, (h, l + dl), order=5, mode='nearest')
+        # apply skew augmentation as geometric transformation
+        skew_p = geometric_transform(P[:, :, n], mapping, (h, l + dl), order=5, mode='nearest')
+        # apply same augmentation to the corresponding segmentation file
         skew_crop_k = crop_center(skew_k, 64, 64)  # crop skewed image to 64,64
         skew_crop_p = crop_center(skew_p, 64, 64)  # crop skewed label to 64,64
-        K[:, :, n] = skew_crop_k  # append skewed slice to numpy array (image)
-        P[:, :, n] = skew_crop_p  # append skewed slice to numpy array (segmenation)
-    print(K.shape)
+        K_intern[:, :, n] = skew_crop_k  # append skewed slice to numpy array (image)
+        P_intern[:, :, n] = skew_crop_p  # append skewed slice to numpy array (segmenation)
+    print(K_intern.shape)
     if augConfig.PlotMode:  # if PlotMode is On, plot augmented image
         i = 20
-        plt.imshow(K[:, i])
+        plt.imshow(K[:,:, i])
         plt.show()
+    K = K_intern
+    P = P_intern
     aug_str = "skewed"  # define augmentation string used for naming the augmented files
     return aug_str
 
@@ -198,8 +200,8 @@ def cropAndResize():
     print("---Crop & Resize---")
     global K
     global P
-    K = np.empty(augConfig.Block_Size)  # create empty numpy arrays with size of Nifty-File
-    P = np.empty(augConfig.Block_Size)
+    K_intern = np.empty(augConfig.Block_Size)  # create empty numpy arrays with size of Nifty-File
+    P_intern = np.empty(augConfig.Block_Size)
     a = rm.randrange(augConfig.cropAndResize["Min"],
                      augConfig.cropAndResize["Max"])  # randomly select starting point of crop
     print("a:", a)
@@ -209,13 +211,15 @@ def cropAndResize():
         crop_p = P[a:a + 16, a:a + 16, n]
         crop_resize_k = resize(crop_k, (64, 64))
         crop_resize_p = resize(crop_p, (64, 64))
-        K[:, :, n] = crop_resize_k  # append skewed slice to numpy array (image)
-        P[:, :, n] = crop_resize_p
-    print(K.shape)
+        K_intern[:, :, n] = crop_resize_k  # append skewed slice to numpy array (image)
+        P_intern[:, :, n] = crop_resize_p
+    print(K_intern.shape)
     if augConfig.PlotMode:  # if PlotMode is On, plot augmented image
         i = 20
-        plt.imshow(K[:, i])
+        plt.imshow(K_intern[:, i])
         plt.show()
+    K = K_intern
+    P = P_intern
     aug_str = "crop_resize"  # define augmentation string used for naming the augmented files
     return aug_str
 
@@ -230,8 +234,8 @@ def cropAndPatch():
     """
     global K
     global P
-    K = np.empty(augConfig.Block_Size)  # create empty numpy arrays with size of Nifty-File
-    P = np.empty(augConfig.Block_Size)
+    K_intern = np.empty(augConfig.Block_Size)  # create empty numpy arrays with size of Nifty-File
+    P_intern = np.empty(augConfig.Block_Size)
     for n in range(K.shape[2]):  # go through each nifty slice
         crop_k1 = K[0:32, 0:32, n]  # crop first slice
         crop_p1 = P[0:32, 0:32, n]
@@ -249,13 +253,15 @@ def cropAndPatch():
         crop_pa = np.concatenate((crop_p3, crop_p2), axis=0)
         crop_pb = np.concatenate((crop_p4, crop_p1), axis=0)
         crop_p = np.concatenate((crop_pb, crop_pa), axis=1)
-        K[:, :, n] = crop_k  # append patched image to numpy array
-        P[:, :, n] = crop_p  # append patched label to numpy array
-    print(K.shape)
+        K_intern[:, :, n] = crop_k  # append patched image to numpy array
+        P_intern[:, :, n] = crop_p  # append patched label to numpy array
+    print(K_intern.shape)
     if augConfig.PlotMode:  # if PlotMode is On, plot augmented image
         i = 20  # start at layer 10
-        plt.imshow(K[:, i])
+        plt.imshow(K_intern[:,:, i])
         plt.show()
+    K = K_intern
+    P = P_intern
     aug_str = "crop_patch"  # define augmentation string used for naming the augmented files
     return aug_str
 
@@ -272,8 +278,8 @@ def elasticDistortion():
     """
     global K
     global P
-    K = np.empty(augConfig.Block_Size)  # create empty numpy arrays with size of Nifty-File
-    P = np.empty(augConfig.Block_Size)
+    K_intern = np.empty(augConfig.Block_Size)  # create empty numpy arrays with size of Nifty-File
+    P_intern = np.empty(augConfig.Block_Size)
     alpha = augConfig.elasticDistortion["alpha"]  # load alpha and sigma parameters from ConfigFile
     sigma = augConfig.elasticDistortion["sigma"]
     print("alpha:", alpha)
@@ -285,15 +291,17 @@ def elasticDistortion():
         dy = gaussian_filter((random_state.rand(*shape) * 2 - 1), sigma, mode="constant", cval=0) * alpha
         x, y = np.meshgrid(np.arange(shape[0]), np.arange(shape[1]), indexing='ij')
         indices = np.reshape(x + dx, (-1, 1)), np.reshape(y + dy, (-1, 1))
-        K[:, :, n] = map_coordinates(K[n], indices, order=1).reshape(
-            shape)  # append distorted slice to numpy array (image)
-        P[:, :, n] = map_coordinates(P[n], indices, order=1).reshape(
-            shape)  # append distorted slice to numpy array (label)
-    print(K.shape)
+        K_intern[:, :, n] = map_coordinates(K[n], indices, order=1).reshape(shape)
+        # append distorted slice to numpy array (image)
+        P_intern[:, :, n] = map_coordinates(P[n], indices, order=1).reshape(shape)
+        # append distorted slice to numpy array (label)
+    print(K_intern.shape)
     if augConfig.PlotMode:  # if PlotMode is On, plot augmented image
         i = 20
-        plt.imshow(K[:, :, i])
+        plt.imshow(K_intern[:, :, i])
         plt.show()
+    K = K_intern
+    P = P_intern
     aug_str = "elastic_distortion"  # define augmentation string used for naming the augmented files
     return aug_str
 
@@ -306,6 +314,8 @@ def randomErasing():
     [O'Gara2019] O'Gara, McGuinness, "Comparing Data Augmentation Strategies for Deep Image Classification", in
     IMVIP 2019 Irish Machine Vision and Image Procession, 2019.
     """
+    global K
+    global P
     K_intern = np.empty(augConfig.Block_Size)  # create empty numpy arrays with size of Nifty-File
     P_intern = np.empty(augConfig.Block_Size)
     a = rm.randrange(augConfig.randomErasing["Min"], augConfig.randomErasing["Max"])
@@ -325,6 +335,8 @@ def randomErasing():
         i = 20
         plt.imshow(K_intern[:, :, i])
         plt.show()
+    K = K_intern
+    P = P_intern
     aug_str = "random_erasing"
     # define augmentation string used for naming the augmented files
     return aug_str
@@ -336,8 +348,8 @@ def noise():
     global K
     global P
     print(K)
-    noise = np.random.normal(augConfig.noise["Min"], augConfig.noise["Max"],
-                             K.shape)  # create numpy array filled with random values
+    noise = np.random.normal(augConfig.noise["Min"], augConfig.noise["Max"], K.shape)
+    # create numpy array filled with random values
     K = K + noise  # add noise numpy array to Nifty numpy array
     P = P + noise
     print(K.shape)
