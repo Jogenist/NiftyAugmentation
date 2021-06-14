@@ -21,9 +21,9 @@ PlotMode = 1
  Set here to True or False if you want activate (1) or deactivate (0) a augmentation method.
 """
 Aug_Whtlst = {
-    "rotate": 1,
-    "scale": 1,
-    "flip": 1,
+    "rotate": 0,
+    "scale": 0,
+    "flip": 0,
     "translate": 0,
     "skew": 0,
     "blur": 0,
@@ -34,6 +34,7 @@ Aug_Whtlst = {
     "noise": 0,
     "shear": 0,
     "saltAndPepper": 0,
+    "randomErasing2": 1,
     # .
     # .
     # .
@@ -73,8 +74,8 @@ Example:
         priority to 0.
 """
 Single_Mode_Priority = 1
-Multiple_Mode_Ordered_Priority = 1
-Multiple_Mode_Unordered_Priority = 1
+Multiple_Mode_Ordered_Priority = 0
+Multiple_Mode_Unordered_Priority = 0
 
 # ----------------------------------------------------------------------------
 # Multiple Augmentation Mode ordered
@@ -212,10 +213,10 @@ Pixels are selected in this range.
 Minimum and maximum size of erased area.
 """
 randomErasing = {
-    "Min": 0,
+    "Min": 45,
     "Max": 48,
-    "sizeMin": 2,
-    "sizeMax": 15
+    "sizeMin": 9,
+    "sizeMax": 10
 }
 
 # -----NOISE----
