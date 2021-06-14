@@ -21,7 +21,7 @@ PlotMode = 1
  Set here to True or False if you want activate (1) or deactivate (0) a augmentation method.
 """
 Aug_Whtlst = {
-    "rotate": 0,
+    "rotate": 1,
     "scale": 0,
     "flip": 0,
     "translate": 0,
@@ -30,10 +30,10 @@ Aug_Whtlst = {
     "cropAndResize": 0,
     "cropAndPatch": 0,
     "elasticDistortion": 0,
-    "randomErasing": 1,
+    "randomErasing": 0,
     "noise": 0,
     "shear": 0,
-    "saltAndPepper": 0,
+    "saltAndPepper": 1,
     # .
     # .
     # .
