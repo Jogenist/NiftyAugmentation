@@ -307,7 +307,7 @@ def elasticDistortion():
 
 
 # -------------------------------------RANDOM ERASING-----------------------------------------------
-def randomErasing2():
+def randomErasing():
     print("---Random Erasing---")
     """
     Random Erasing as compared in [O'Gara2019].
@@ -329,38 +329,6 @@ def randomErasing2():
     plt.show()
     i = i + 1
     aug_str = "random_erasing"
-
-def randomErasing():
-    print("---Random Erasing---")
-    """
-    Random Erasing as compared in [O'Gara2019].
-    [O'Gara2019] O'Gara, McGuinness, "Comparing Data Augmentation Strategies for Deep Image Classification", in
-    IMVIP 2019 Irish Machine Vision and Image Procession, 2019.
-    """
-    global K
-    global P
-    K_intern = np.empty(augConfig.Block_Size)  # create empty numpy arrays with size of Nifty-File
-    P_intern = np.empty(augConfig.Block_Size)
-    a = rm.randrange(augConfig.randomErasing["Min"], augConfig.randomErasing["Max"])
-    # randomly select pixels to be erased
-    b = 10
-    # set size of erased area here
-    for n in range(K.shape[2]):
-        # go through each nifty slice
-        K[a:a + b, a:a + b, n] = 0
-        # delete values at given location in image (set to 0 -> black)
-        P[a:a + b, a:a + b, n] = 0
-        K_intern[:, :, n] = K[:, :, n]
-        P_intern[:, :, n] = P[:, :, n]
-    print(K_intern.shape)
-    if augConfig.PlotMode:
-        # if PlotMode is On, plot augmented image
-        i = 20
-        plt.imshow(K_intern[:, i])
-        plt.show()
-    aug_str = "random_erasing"
-    # define augmentation string used for naming the augmented files
-    return aug_str
 
 
 # -------------------------------------NOISE-----------------------------------------------
