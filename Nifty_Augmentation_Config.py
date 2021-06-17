@@ -1,9 +1,7 @@
 """
 Nifty_Augmentation_Config.py
-
 Parameters and Configurations for the augmentation functions are defined and configured here.
 This file is used by Nifty_Augmentation.py to apply the augmentations with the user-customizable parameters.
-
 06/2021
 """
 # ----------------------------------------------------------------------------
@@ -38,7 +36,7 @@ Aug_Whtlst = {
     # .
     # .
     # add your new method here
-    "noAugmentation": 0
+    "noAugmentation": 1
 }
 # ----------------------------------------------------------------------------
 # Block Size
@@ -63,7 +61,7 @@ Example:
         Multiple_Mode_Unordered_Priority = 1
     --> this leads to a execution of:
             25 % rotate, 25 % scale, 25 % multiple, 25 % random
-    
+
     4. If the priority of random is changed to 2, then we get:
         Single_Mode_Priority = 1
         Multiple_Mode_Ordered_Priority = 1
@@ -72,9 +70,9 @@ Example:
     5. You can also deactivate one of the executions here, if you set the 
         priority to 0.
 """
-Single_Mode_Priority = 0
+Single_Mode_Priority = 1
 Multiple_Mode_Ordered_Priority = 0
-Multiple_Mode_Unordered_Priority = 1
+Multiple_Mode_Unordered_Priority = 0
 
 # ----------------------------------------------------------------------------
 # Multiple Augmentation Mode ordered
@@ -85,7 +83,7 @@ multiple augmentations.
 # Set the following mode to activate the augmentation:
 # False = Deactivated
 # True = ordered Augmentations from ordered Whitelist below
-Multiple_Mode_ordered_Active = True
+Multiple_Mode_ordered_Active = False
 
 # Ordered multiple Augmentation
 Aug_Whtlst_Multiple_ordered = [
@@ -94,23 +92,18 @@ Aug_Whtlst_Multiple_ordered = [
 ]
 
 # Multiple Augmentations unordered:
-# 
+#
 """
 For crazy augmentations without any 
 !!!!!!!! This can cause issues and the resolution can be something stange !!!!!!!!!!!!
-
 """
 # False = Deactivated
 # True = unordered Augmentations for Whitelist
-Multiple_Mode_unordered_Active = True
+Multiple_Mode_unordered_Active = False
 # Set Multiple_Aug_Deep to the number how many functions should be called behind each other
 # deactivated function from whitelist are not called
 Multiple_Aug_Depth_min = 8
 Multiple_Aug_Depth_max = 10
-
-
-
-
 
 # ----------------------------------------------------------------------------
 # Setting for Augmentation

@@ -1,10 +1,8 @@
 """
 main.py
-
 This file initiates the nifty augmentation.
 First it reads all nifty-images and segmentations as numpy arrays.
 Then it randomly applies augmentations from Nifty_Augmentation.py to the files and saves them as new a nifty.
-
 06/2021
 """
 

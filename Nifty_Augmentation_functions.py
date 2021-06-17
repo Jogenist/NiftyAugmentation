@@ -118,7 +118,7 @@ def translate():
     global P
     K = affine_transform(K, rotmat(0), translation, output_shape=(64, 64, 64),
                          order=1)  # apply translation as an affine transformation
-    P = affine_transform(P, rotmat(0), translation, output_shape=(32, 32, 32),
+    P = affine_transform(P, rotmat(0), translation, output_shape=(64, 64, 64),
                          order=1)  # apply same augmentation to the corresponding segmentation file
     print(K.shape)
     if augConfig.PlotMode:  # if PlotMode is On, plot augmented image
@@ -246,8 +246,8 @@ def cropAndPatch():
         crop_k4 = K[0:32, 32:64, n]  # crop fourth slice
         crop_p4 = P[0:32, 32:64, n]
         # rebuild k
-        crop_ka = np.concatenate((crop_k3, crop_k2), axis=0)
-        crop_kb = np.concatenate((crop_k4, crop_k1), axis=0)
+        crop_ka = np.concatenate((crop_k4, crop_k2), axis=0)
+        crop_kb = np.concatenate((crop_k3, crop_k1), axis=0)
         crop_k = np.concatenate((crop_kb, crop_ka), axis=1)
         # rebuild p
         crop_pa = np.concatenate((crop_p3, crop_p2), axis=0)

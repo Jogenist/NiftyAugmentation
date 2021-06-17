@@ -1,9 +1,7 @@
 """
 Nifty_Augmentation.py
-
 Contains functions and implementation for serveral augmentation methods. Is used in main.py to augment Nifty-Files.
 Uses Nifty_Augmentation_Config for user-customizable augmentation parameters.
-
 06/2021
 """
 # ----------------------------------------------------------------------------
