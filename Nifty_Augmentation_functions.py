@@ -55,8 +55,9 @@ def rotate():
                          order=1)  # apply rotation matrix as an affine transformation
     P = affine_transform(P, M, [0, 0, 0], output_shape=(64, 64, 64),
                          order=1)  # apply same augmentation to the corresponding segmentation file
-    print(K.shape)
+
     if augConfig.PlotMode:  # if PlotMode is On, plot augmented image
+        print(K.shape)
         i = 20
         plt.imshow(K[:, i])
         plt.show()
@@ -81,8 +82,9 @@ def scale():
                          order=1)  # apply transformation as an affine transformation
     P = affine_transform(P, M, [0, 0, 0], output_shape=(64, 64, 64),
                          order=1)  # apply same augmentation to the corresponding segmentation file
-    print(K.shape)
+
     if augConfig.PlotMode:  # if PlotMode is On, plot augmented image
+        print(K.shape)
         i = 20
         plt.imshow(K[:, i])
         plt.show()
@@ -98,8 +100,9 @@ def flip():
     flipAxis = rm.randrange(0, 1, 1)  # randomly select flip axis
     K = np.flip(K, flipAxis)  # apply transformation as an affine transformation
     P = np.flip(P, flipAxis)  # apply same augmentation to the corresponding segmentation file
-    print(K.shape)
+
     if augConfig.PlotMode:  # if PlotMode is On, plot augmented image
+        print(K.shape)
         i = 20  # start at layer 10
         plt.imshow(K[:, i])
         plt.show()
@@ -120,10 +123,11 @@ def translate():
                          order=1)  # apply translation as an affine transformation
     P = affine_transform(P, rotmat(0), translation, output_shape=(64, 64, 64),
                          order=1)  # apply same augmentation to the corresponding segmentation file
-    print(K.shape)
+
     if augConfig.PlotMode:  # if PlotMode is On, plot augmented image
+        print(K.shape)
         i = 20
-        plt.imshow(K[:,:, i])
+        plt.imshow(K[:, i])
         plt.show()
     aug_str = "translated"  # define augmentation string used for naming the augmented files
     return aug_str
@@ -161,13 +165,14 @@ def skew():
         skew_crop_p = crop_center(skew_p, 64, 64)  # crop skewed label to 64,64
         K_intern[:, :, n] = skew_crop_k  # append skewed slice to numpy array (image)
         P_intern[:, :, n] = skew_crop_p  # append skewed slice to numpy array (segmenation)
-    print(K_intern.shape)
+    K = K_intern
+    P = P_intern
     if augConfig.PlotMode:  # if PlotMode is On, plot augmented image
+        print(K.shape)
         i = 20
         plt.imshow(K[:,:, i])
         plt.show()
-    K = K_intern
-    P = P_intern
+
     aug_str = "skewed"  # define augmentation string used for naming the augmented files
     return aug_str
 
@@ -186,8 +191,8 @@ def blur():
                          order=1)  # apply blur as affine transformation
     P = affine_transform(P, rotmat(0), translation, output_shape=(64, 64, 64),
                          order=1)  # apply same augmentation to the corresponding segmentation file
-    print(K.shape)
     if augConfig.PlotMode:  # if PlotMode is On, plot augmented image
+        print(K.shape)
         i = 20  # start at layer 10
         plt.imshow(K[:, i])
         plt.show()
@@ -213,8 +218,8 @@ def cropAndResize():
         crop_resize_p = resize(crop_p, (64, 64))
         K_intern[:, :, n] = crop_resize_k  # append skewed slice to numpy array (image)
         P_intern[:, :, n] = crop_resize_p
-    print(K_intern.shape)
     if augConfig.PlotMode:  # if PlotMode is On, plot augmented image
+        print(K_intern.shape)
         i = 20
         plt.imshow(K_intern[:, i])
         plt.show()
@@ -255,8 +260,9 @@ def cropAndPatch():
         crop_p = np.concatenate((crop_pb, crop_pa), axis=1)
         K_intern[:, :, n] = crop_k  # append patched image to numpy array
         P_intern[:, :, n] = crop_p  # append patched label to numpy array
-    print(K_intern.shape)
+
     if augConfig.PlotMode:  # if PlotMode is On, plot augmented image
+        print(K_intern.shape)
         i = 20  # start at layer 10
         plt.imshow(K_intern[:,:, i])
         plt.show()
@@ -295,13 +301,14 @@ def elasticDistortion():
         # append distorted slice to numpy array (image)
         P_intern[:, :, n] = map_coordinates(P[n], indices, order=1).reshape(shape)
         # append distorted slice to numpy array (label)
-    print(K_intern.shape)
-    if augConfig.PlotMode:  # if PlotMode is On, plot augmented image
-        i = 20
-        plt.imshow(K_intern[:, :, i])
-        plt.show()
     K = K_intern
     P = P_intern
+    if augConfig.PlotMode:  # if PlotMode is On, plot augmented image
+        print(K.shape)
+        i = 20
+        plt.imshow(K[:, i])
+        plt.show()
+
     aug_str = "elastic_distortion"  # define augmentation string used for naming the augmented files
     return aug_str
 
@@ -329,8 +336,8 @@ def randomErasing():
         P[a:a + b, a:a + b, n] = 0
         K_intern[:, :, n] = K[:, :, n]
         P_intern[:, :, n] = P[:, :, n]
-    print(K_intern.shape)
     if augConfig.PlotMode:
+        print(K_intern.shape)
         # if PlotMode is On, plot augmented image
         i = 20
         plt.imshow(K_intern[:, :, i])
@@ -352,8 +359,8 @@ def noise():
     # create numpy array filled with random values
     K = K + noise  # add noise numpy array to Nifty numpy array
     P = P + noise
-    print(K.shape)
     if augConfig.PlotMode:  # if PlotMode is On, plot augmented image
+        print(K.shape)
         i = 20
         plt.imshow(K[:, i])
         plt.show()
@@ -380,8 +387,8 @@ def shear():
                          order=1)  # apply given rotation matrix to nifty-file with affine transformation
     P = affine_transform(P, M, [0, 0, 0], output_shape=(64, 64, 64),
                          order=1)  # apply same augmentation to the corresponding segmentation file
-    print(K.shape)
     if augConfig.PlotMode:  # if PlotMode is On, plot augmented image
+        print(K.shape)
         i = 20
         plt.imshow(K[:, i])
         plt.show()
@@ -407,11 +414,11 @@ def saltAndPepper():
             K[a[p], b[p], n] = 1  # apply pepper
             P[a[p], b[p], n] = 1
             K[c[p], d[p], n] = 0  # apply salt
-            P[c[p], d[p], n] = 0
+            # P[c[p], d[p], n] = 0   # do not apply salt to groundtruth, since 0 equals an segmentation
             K_intern[:, :, n] = K[:, :, n]
             P_intern[:, :, n] = P[:, :, n]
-    print(K_intern.shape)
     if augConfig.PlotMode:  # if PlotMode is On, plot augmented image
+        print(K_intern.shape)
         i = 20
         plt.imshow(K_intern[:, :, i])
         plt.show()
@@ -429,8 +436,8 @@ def noAugmentation():
     global P
     K = K  # save unaugmented file as new numpy array
     P = P
-    print(K.shape)
     if augConfig.PlotMode:  # if PlotMode is On, plot unaugmented image
+        print(K.shape)
         i = 20
         plt.imshow(K[:, i])
         plt.show()
