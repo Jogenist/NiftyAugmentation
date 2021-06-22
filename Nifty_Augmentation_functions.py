@@ -358,7 +358,7 @@ def noise():
     noise = np.random.normal(augConfig.noise["Min"], augConfig.noise["Max"], K.shape)
     # create numpy array filled with random values
     K = K + noise  # add noise numpy array to Nifty numpy array
-    P = P + noise
+    #P = P + noise
     if augConfig.PlotMode:  # if PlotMode is On, plot augmented image
         print(K.shape)
         i = 20
@@ -412,7 +412,7 @@ def saltAndPepper():
     for n in range(K.shape[2]):  # go through each nifty slice
         for p in range(len(a)):
             K[a[p], b[p], n] = 1  # apply pepper
-            P[a[p], b[p], n] = 1
+            #P[a[p], b[p], n] = 1
             K[c[p], d[p], n] = 0  # apply salt
             # P[c[p], d[p], n] = 0   # do not apply salt to groundtruth, since 0 equals an segmentation
             K_intern[:, :, n] = K[:, :, n]

@@ -19,24 +19,24 @@ PlotMode = 1
  Set here to True or False if you want activate (1) or deactivate (0) a augmentation method.
 """
 Aug_Whtlst = {
-    "rotate": 1,
-    "scale": 1,
-    "flip": 1,
-    "translate": 1,
-    "skew": 1,
-    "blur": 1,
-    "cropAndResize": 1,
-    "cropAndPatch": 1,
-    "elasticDistortion": 1,
-    "randomErasing": 1,
+    "rotate": 0,
+    "scale": 0,
+    "flip": 0,
+    "translate": 0,
+    "skew": 0,
+    "blur": 0,
+    "cropAndResize": 0,
+    "cropAndPatch": 0,
+    "elasticDistortion": 0,
+    "randomErasing": 0,
     "noise": 1,
-    "shear": 1,
-    "saltAndPepper": 1,
+    "shear": 0,
+    "saltAndPepper": 0,
     # .
     # .
     # .
     # add your new method here
-    "noAugmentation": 1
+    "noAugmentation": 0
 }
 # ----------------------------------------------------------------------------
 # Block Size
